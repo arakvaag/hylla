@@ -1,0 +1,126 @@
+a:link {
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:active {
+	text-decoration: underline;
+}
+
+.soekespilledel {
+	position: fixed;
+	width: 250px;
+	float: left;
+	padding-left: 10px;
+}
+
+.hylledel {
+	margin-left: 270px;
+	max-width: 1100px;
+}
+
+.toppmeny {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.album {
+	float: left;
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 70%;
+	padding-top: 10px;
+	padding-right: 35px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+}
+
+.album img {
+	width: 110px;
+	height: 110px;
+	padding: 2px;
+	border: solid #CFCFCF 1px;
+	box-shadow: 1px 3px 8px grey;
+}
+
+.artistnavn {
+	font-weight: bold;
+}
+
+#detaljer {
+	margin-left: 10px;
+}
+
+#detaljerVenstre {
+	position: absolute;
+	width: 320px;
+	margin-top: 15px;
+}
+
+.stortbilde {
+	width: 300px;
+	height: 300px;
+	padding: 10px;
+	border: solid #CFCFCF 1px;
+	box-shadow: 1px 3px 8px grey;
+}
+
+#detaljerHoyre {
+	position: absolute;
+	margin-top: 20px;
+	margin-left: 350px;
+}
+
+#tittel {
+	margin-top: 10px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 125%;
+}
+
+#spor {
+	margin-top: 0px;
+}
+
+#sjanger {
+	margin-top: 10px;
+}
+
+#artist {
+	margin-left: 10px;
+}
+
+#artistVenstredel {
+	position: absolute;
+	margin-top: 10px;
+	text-align: center;
+}
+
+#artistHylledel {
+	position: absolute;
+	margin-left: 350px;
+	max-width: 1000px;
+}
+
+.hoveddelSide {
+	margin-left: 10px;
+	max-width: 1300px;
+}
+
+.albumNedreVenstreTabell {
+	text-align: center;
+}
+
+.albumNedreVenstreTabell table {
+	width: 100%;
+}
+
+.albumNedreVenstreTabell td {
+}
