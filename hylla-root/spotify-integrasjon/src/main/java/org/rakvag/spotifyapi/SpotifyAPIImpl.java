@@ -22,10 +22,10 @@ import org.slf4j.LoggerFactory;
 public class SpotifyAPIImpl implements SpotifyAPI {
 
 	private static final Logger logger = LoggerFactory.getLogger(SpotifyAPIImpl.class.getName());
-	private static final int MAX_ANTALL_TRAADER = 15;
+	private static final int MAX_ANTALL_TRAADER = 16;
 	private static final int TIMEOUT_TRAADER = 60;
-	
-	private HTTPBufferedReader httpReader;	
+
+	private HTTPBufferedReader httpReader;
 
 	@Override
 	public List<SpotifyAlbum> soekEtterAlbum(String artist, String album, int maxForsek) {
@@ -75,7 +75,7 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 	private String haandterSpesialtegn(String streng) {
 		if (streng == null)
 			return null;
-	
+
 		streng = streng.replace(" ", "+");
 		streng = streng.replace("æ", "ae");
 		streng = streng.replace("ø", "o");
@@ -93,11 +93,11 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 	private String trimTilNull(String streng) {
 		if (streng == null)
 			return null;
-		
+
 		streng = streng.trim();
 		if (streng.isEmpty())
 			return null;
-	
+
 		return streng;
 	}
 
@@ -218,17 +218,19 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 				if (antallTraader > 5) {
 					proevIgjen = true;
 					antallTraader -= 5;
+				} else {
+					throw new RuntimeException("Forsøk på å starte " + antallTraader + " tråder feiler. Feilmelding: "
+							+ e.getMessage(), e);
 				}
-				throw new RuntimeException("Forsøk på å starte " + antallTraader + " tråder feiler. Feilmelding: "
-						+ e.getMessage(), e);
 			} catch (OutOfMemoryError e) {
 				logger.warn("Fikk OutOfMemoryError ved forsøk på å åpne " + antallTraader + " tråder");
 				if (antallTraader > 5) {
 					proevIgjen = true;
 					antallTraader -= 5;
+				} else {
+					throw new RuntimeException("Forsøk på å starte " + antallTraader + " tråder feiler. Feilmelding: "
+							+ e.getMessage(), e);
 				}
-				throw new RuntimeException("Forsøk på å starte " + antallTraader + " tråder feiler. Feilmelding: "
-						+ e.getMessage(), e);
 			}
 		} while (proevIgjen);
 
