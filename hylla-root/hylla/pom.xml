@@ -4,11 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.rakvag</groupId>
-		<artifactId>hylla-parent</artifactId>
+		<artifactId>hylla-root</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>hylla-web</artifactId>
-	<name>hylla</name>
+	<artifactId>hylla</artifactId>
 	<packaging>war</packaging>
 	<version>${hylla-version}</version>
 
