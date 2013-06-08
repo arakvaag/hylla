@@ -26,8 +26,12 @@
 		<property name="password" value="hyllaDB" />
 	</bean>
 
-	<bean id="spotifyAPI" class="org.rakvag.spotifyapi.SpotifyAPIImpl" />
-
+	<bean id="spotifyAPI" class="org.rakvag.spotifyapi.SpotifyAPIImpl" >
+		<property name="httpReader">
+			<bean class="org.rakvag.spotifyapi.HTTPBufferedReader" />
+		</property>
+	</bean>
+	
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="loadTimeWeaver">
