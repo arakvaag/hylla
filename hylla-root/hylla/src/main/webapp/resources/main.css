@@ -16,13 +16,17 @@ a:active {
 
 .soekespilledel {
 	position: fixed;
-	width: 250px;
+	width: 300px;
 	float: left;
 	padding-left: 10px;
 }
 
+#avspiller {
+	padding-top: 10px;
+}
+
 .hylledel {
-	margin-left: 270px;
+	margin-left: 330px;
 	max-width: 1100px;
 }
 

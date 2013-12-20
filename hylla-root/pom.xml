@@ -16,10 +16,19 @@
 	<properties>
 		<java-version>1.6</java-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spotify-integrasjon-version>1.0.1-SNAPSHOT</spotify-integrasjon-version>
-		<hylla-version>1.0.1-SNAPSHOT</hylla-version>
 	</properties>
 
+	<repositories>
+    	<repository>
+        	<id>org.springframework.maven.milestone</id>
+           	<name>Spring Maven Milestone Repository</name>
+           	<url>http://maven.springframework.org/milestone</url>
+           	<snapshots>
+            	<enabled>false</enabled>
+           	</snapshots>
+    	</repository>
+	</repositories>
+	
 	<build>
 		<pluginManagement>
 			<plugins>

@@ -8,6 +8,8 @@
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
 	<link rel="stylesheet" href="resources/main.css" type="text/css" />
 	<link rel="shortcut icon" href="resources/icon.png" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="resources/hylla.js"></script>
 </head>
 <body>
 	<div class="soekespilledel">
@@ -33,16 +35,13 @@
 		<form:form id="filterForm" method="POST" action="endreFilter">
 			<form:select path="valgtSjanger" items="${sjangre}"
 				onchange="document.getElementById('filterForm').submit()"
-				autofocus="autofocus" />
-			<br>
+				autofocus="autofocus" /><br>
 			<form:select path="valgtTidsperiode" items="${tidsperioder}"
 				onchange="document.getElementById('filterForm').submit()" />
-			<br>
 			<form:select path="valgtNasjonalitet" items="${nasjonaliteter}"
 				onchange="document.getElementById('filterForm').submit()" />
-			<br><br>
-			<iframe src="https://embed.spotify.com/?uri=${spotifyURI}"
-				width="250" height="350" frameborder="0" allowtransparency="true"></iframe>
+			<iframe id="avspiller" src="https://embed.spotify.com/?uri=${spotifyURI}"
+				width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
 		</form:form>
 
 	</div>
@@ -50,9 +49,8 @@
 	<div class="hylledel">
 		<c:forEach var="album" items="${albumene}">
 			<div class="album">
-				<a href="aapne?spotifyURI=${album.spotifyURI}">
-					<img alt="${album.artist.navn} - ${album.navn}" title="${album.artist.navn} - ${album.navn}"
-						src="${album.coverartlink}"></a><br> 
+				<img alt="${album.artist.navn} - ${album.navn}" title="${album.artist.navn} - ${album.navn}"
+					src="${album.coverartlink}" onclick="spillAlbum('${album.spotifyURI}')"><br> 
 				<c:if test="${album.erPaaHylle}">
 					<a href="album/fjernFraHylle?albumId=${album.id}">Fjern fra hylla</a>
 				</c:if>

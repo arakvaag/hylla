@@ -31,7 +31,7 @@ public class SpotifyAlbum extends SpotifyEntitet {
 		}
 
 		String territories = availability.getTerritories();
-		return ((territories.contains("NO") || territories.contains("worldwide")));
+		return (territories.isEmpty() || territories.contains("NO") || territories.contains("worldwide"));
 	}
 
 	public String getArtistid() {

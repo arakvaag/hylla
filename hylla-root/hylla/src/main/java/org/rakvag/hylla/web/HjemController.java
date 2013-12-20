@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -90,6 +91,14 @@ public class HjemController {
 	public String aapneMusikk(@ModelAttribute("spotifyURI") String spotifyURI, RedirectAttributes redirAttr) {
 		oppdaterHylle(hyllaService.hentHylle(sesjonsdata.getHylleId()), null, spotifyURI);
 		return "redirect:/";
+	}
+
+	@RequestMapping(value = "/lagreAapentAlbum", method = RequestMethod.POST)
+	public @ResponseBody String lagreAapentAlbum(@ModelAttribute("spotifyURI") String spotifyURI) {
+		Hylle hylle = hyllaService.hentHylle(sesjonsdata.getHylleId());
+		hylle.setSpotifyURIAapentAlbum(spotifyURI);
+		hyllaService.lagreHylle(hylle);
+		return "";
 	}
 
 	private Hylle oppdaterHylle(Hylle hylle, HjemFilterForm filterForm, String spotifyURIAapentAlbum) {
