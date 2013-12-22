@@ -16,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
@@ -44,8 +43,6 @@ public class Album implements SpotifyEntitet, Entitet, Comparable<Album> {
 	private Sjanger sjanger;
 	@ManyToMany(mappedBy = "albumene", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<Hylle> hyller;
-	@OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
-	private Set<Spor> spor;
 	@Column(nullable = true)
 	private String coverartlink;
 	@Column(nullable = false)
@@ -55,6 +52,9 @@ public class Album implements SpotifyEntitet, Entitet, Comparable<Album> {
 	@Column(nullable = false)
 	private float popularitet;
 
+	//@OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+	@Transient
+	private Set<Spor> spor;
 	@Transient
 	private boolean erPaaHylle;
 

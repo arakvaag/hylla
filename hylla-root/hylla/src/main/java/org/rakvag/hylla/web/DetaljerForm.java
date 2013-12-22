@@ -3,7 +3,6 @@ package org.rakvag.hylla.web;
 
 public class DetaljerForm {
 	private String sjanger;
-	private String nasjonalitet;
 	private long albumId;
 	private long artistId;
 
@@ -21,14 +20,6 @@ public class DetaljerForm {
 
 	public void setAlbumId(long albumId) {
 		this.albumId = albumId;
-	}
-
-	public String getNasjonalitet() {
-		return nasjonalitet;
-	}
-
-	public void setNasjonalitet(String nasjonalitet) {
-		this.nasjonalitet = nasjonalitet;
 	}
 
 	public long getArtistId() {

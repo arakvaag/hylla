@@ -59,6 +59,7 @@ public class AlbumController {
 	@RequestMapping(value = "/album/", method = RequestMethod.GET)
 	public ModelAndView aapne(@ModelAttribute("albumId") String albumId) {
 		Album album = albumService.hentAlbum(Long.parseLong(albumId));
+		album.setSpor(albumService.hentSporenetilAlbumFraSpotify(album.getSpotifyURI()));
 		album.setErPaaHylle(sesjonsdata.getHylleId());
 		ModelAndView mv = new ModelAndView("album", "album", album);
 		DetaljerForm form = new DetaljerForm();

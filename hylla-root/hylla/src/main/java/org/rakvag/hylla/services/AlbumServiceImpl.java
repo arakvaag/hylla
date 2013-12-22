@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import org.rakvag.hylla.daos.SporDAO;
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Sjanger;
+import org.rakvag.hylla.domain.Spor;
 import org.rakvag.spotifyapi.SpotifyAPI;
 import org.rakvag.spotifyapi.entity.SpotifyAlbum;
 import org.rakvag.spotifyapi.entity.SpotifyTrack;
@@ -79,6 +80,23 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 			album = albumDAO.lagre(album);
 		}
 		return album;
+	}
+
+	@Override
+	public Set<Spor> hentSporenetilAlbumFraSpotify(String albumsSpotifyURI) {
+		Set<Spor> sporene = new HashSet<Spor>();
+
+		ArrayList<String> spotifyURIer = new ArrayList<String>();
+		spotifyURIer.add(albumsSpotifyURI);
+		Collection<SpotifyAlbum> spotifyAlbums = spotifyAPI.hentAlbumPaaSpotifyURIer(spotifyURIer, 10);
+
+		if (!spotifyAlbums.isEmpty()) {
+			List<SpotifyTrack> tracks = spotifyAlbums.iterator().next().getTracks();
+			for (SpotifyTrack spotifyTrack : tracks)
+				sporene.add(Oversetter.oversettSpotifyTrack(spotifyTrack));
+		}
+
+		return sporene;
 	}
 
 	@Override

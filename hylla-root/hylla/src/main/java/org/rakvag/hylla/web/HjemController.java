@@ -34,7 +34,6 @@ public class HjemController {
 
 	private final static String KODE_ALLE_SJANGRE = "ALLE";
 	private final static String KODE_ALLE_TIDSPERIODER = "ALLE";
-	private final static String KODE_ALLE_NASJONALITETER = "ALLE";
 
 	@Inject
 	private AlbumService albumService;
