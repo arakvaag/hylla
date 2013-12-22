@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Hylle;
-import org.rakvag.hylla.domain.Nasjonalitet;
 import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.domain.Tidsperiode;
 import org.rakvag.hylla.services.AlbumService;
@@ -51,7 +50,7 @@ public class HjemController {
 		Hylle hylle = hyllaService.hentHylle(sesjonsdata.getHylleId());
 
 		Set<Album> albumene = hylle.getAlbumene();
-		albumene = filtrerAlbumene(albumene, hylle.getValgtSjanger(), hylle.getValgtTidsperiode(), hylle.getValgtNasjonalitet());
+		albumene = filtrerAlbumene(albumene, hylle.getValgtSjanger(), hylle.getValgtTidsperiode());
 		List<Album> sortertListeAvAlbum = lagSortertListMedAlbum(albumene);
 		for (Album album : sortertListeAvAlbum)
 			album.setErPaaHylle(sesjonsdata.getHylleId());
@@ -60,15 +59,11 @@ public class HjemController {
 		sjangre.put(KODE_ALLE_SJANGRE, "Alle sjangre");
 		Map<String, String> tidsperioder = Tidsperiode.lagTidsperiodeMap();
 		tidsperioder.put(KODE_ALLE_TIDSPERIODER, "Alle år");
-		Map<String, String> nasjonaliteter = Nasjonalitet.lagNasjonalitetMap();
-		nasjonaliteter.put(KODE_ALLE_NASJONALITETER, "Alle nasjonaliteter");
 		HjemFilterForm filterForm = new HjemFilterForm();
 		filterForm
 				.setValgtSjanger(hylle.getValgtSjanger() != null ? hylle.getValgtSjanger().name() : KODE_ALLE_SJANGRE);
 		filterForm.setValgtTidsperiode(hylle.getValgtTidsperiode() != null ? hylle.getValgtTidsperiode().name()
 				: KODE_ALLE_TIDSPERIODER);
-		filterForm.setValgtNasjonalitet(hylle.getValgtNasjonalitet() != null ? hylle.getValgtNasjonalitet().name()
-				: KODE_ALLE_NASJONALITETER);
 
 		ModelAndView mv = new ModelAndView("hjem");
 		mv.addObject("albumene", sortertListeAvAlbum);
@@ -76,7 +71,6 @@ public class HjemController {
 		mv.addObject("spotifyURI", hylle.getSpotifyURIAapentAlbum());
 		mv.addObject("sjangre", sjangre);
 		mv.addObject("tidsperioder", tidsperioder);
-		mv.addObject("nasjonaliteter", nasjonaliteter);
 
 		return mv;
 	}
@@ -119,13 +113,6 @@ public class HjemController {
 					hylle.setValgtTidsperiode(Tidsperiode.valueOf(valgtTidsperiode));
 			}
 
-			String valgtNasjonalitet = filterForm.getValgtNasjonalitet();
-			if (valgtNasjonalitet != null) {
-				if (valgtNasjonalitet == null || KODE_ALLE_TIDSPERIODER.equals(valgtNasjonalitet))
-					hylle.setValgtNasjonalitet(null);
-				else
-					hylle.setValgtNasjonalitet(Nasjonalitet.valueOf(valgtNasjonalitet));
-			}
 		}
 
 		hylle.setSpotifyURIAapentAlbum(!StringUtils.isBlank(spotifyURIAapentAlbum) ? spotifyURIAapentAlbum : hylle
@@ -136,7 +123,7 @@ public class HjemController {
 		return hylle;
 	}
 
-	private Set<Album> filtrerAlbumene(Set<Album> favorittene, Sjanger sjanger, Tidsperiode tidsperiode, Nasjonalitet nasjonalitet) {
+	private Set<Album> filtrerAlbumene(Set<Album> favorittene, Sjanger sjanger, Tidsperiode tidsperiode) {
 		Set<Album> filtrert = new HashSet<Album>();
 
 		for (Album album : favorittene) {
@@ -146,9 +133,6 @@ public class HjemController {
 				skalMed = false;
 
 			if (tidsperiode != null && tidsperiode != Tidsperiode.hentTidsperiode(album.getAar()))
-				skalMed = false;
-
-			if (nasjonalitet != null && nasjonalitet != album.getArtist().getNasjonalitet())
 				skalMed = false;
 
 			if (skalMed)

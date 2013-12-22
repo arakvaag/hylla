@@ -30,10 +30,6 @@ public class Hylle implements Entitet {
 	@Column(nullable = true)
 	private Tidsperiode valgtTidsperiode;
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = true)
-	private Nasjonalitet valgtNasjonalitet;
-
 	@Column(nullable = true)
 	private String spotifyURIAapentAlbum;
 
@@ -79,14 +75,6 @@ public class Hylle implements Entitet {
 
 	public Set<Album> getAlbumene() {
 		return albumene;
-	}
-
-	public Nasjonalitet getValgtNasjonalitet() {
-		return valgtNasjonalitet;
-	}
-
-	public void setValgtNasjonalitet(Nasjonalitet valgtNasjonalitet) {
-		this.valgtNasjonalitet = valgtNasjonalitet;
 	}
 
 }

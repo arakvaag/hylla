@@ -18,14 +18,6 @@
 				<img alt="${artist.navn}" src="${artist.bildelink}">
 			</div><br> 
 			<span class="artistnavn">${artist.navn}</span>
-			<div id="sjanger">
-				<form:form id="artistForm" method="POST" action="artist/lagre">
-					<form:select path="nasjonalitet" items="${nasjonaliteter}"
-						onchange="document.getElementById('artistForm').submit()"
-						autofocus="true" />
-					<form:hidden path="artistId" />
-				</form:form>
-			</div>
 		</div>
 	</div>
 

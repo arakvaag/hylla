@@ -11,7 +11,6 @@ public enum Sjanger {
 	SOUL_FUNK_RNB("Soul, Funk, RnB"), 
 	ELECTRONICA("Electronica"), 
 	JAZZ("Jazz"), 
-	BARNEMUSIKK("Barnemusikk"), 
 	IKKE_SATT("Uten sjanger");
 	
 	private String dekode;

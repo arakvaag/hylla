@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Artist;
-import org.rakvag.hylla.domain.Nasjonalitet;
 import org.rakvag.hylla.services.ArtistService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,25 +47,10 @@ public class ArtistController {
 		if (albumene.size() >= 60)
 			albumene = albumene.subList(0, 59);
 		logger.debug("Ferdig med filtrering og sortering av artistens " + artist.getAlbum().size() + " album");
-		
-		mv.addObject("albumene", albumene);
-		mv.addObject("nasjonaliteter", Nasjonalitet.lagNasjonalitetMap());
-		DetaljerForm form = new DetaljerForm();
-		form.setNasjonalitet(artist.getNasjonalitet().name());
-		form.setArtistId(artist.getId());
-		mv.addObject("command", form);
 
+		mv.addObject("albumene", albumene);
 		logger.info("Ferdig kjørt aapneDetaljer med artistId " + artistId);
 		return mv;
 	}
 	
-	@RequestMapping(value = "/artist/lagre", method = RequestMethod.POST)
-	public ModelAndView lagre(@ModelAttribute("command") DetaljerForm form) {
-		Artist artist = artistService.hentArtist(form.getArtistId());
-		Nasjonalitet nasjonalitet = Nasjonalitet.valueOf(form.getNasjonalitet());
-		artist.setNasjonalitet(nasjonalitet);
-		artist = artistService.lagreArtist(artist);
-		return new ModelAndView("redirect:/artist/", "artistId", form.getArtistId());
-	}
-
 }

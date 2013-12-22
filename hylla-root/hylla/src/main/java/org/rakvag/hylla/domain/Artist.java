@@ -35,10 +35,6 @@ public class Artist implements SpotifyEntitet {
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Nasjonalitet nasjonalitet = Nasjonalitet.IKKE_SATT;
-
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Sjanger defaultSjanger = Sjanger.IKKE_SATT;
 	
 	public String getKortnavn() {
@@ -98,14 +94,6 @@ public class Artist implements SpotifyEntitet {
 
 	public void setDefaultSjanger(Sjanger defaultSjanger) {
 		this.defaultSjanger = defaultSjanger;
-	}
-
-	public Nasjonalitet getNasjonalitet() {
-		return nasjonalitet;
-	}
-
-	public void setNasjonalitet(Nasjonalitet nasjonalitet) {
-		this.nasjonalitet = nasjonalitet;
 	}
 
 }

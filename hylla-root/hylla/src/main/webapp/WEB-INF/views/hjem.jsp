@@ -35,10 +35,8 @@
 		<form:form id="filterForm" method="POST" action="endreFilter">
 			<form:select path="valgtSjanger" items="${sjangre}"
 				onchange="document.getElementById('filterForm').submit()"
-				autofocus="autofocus" /><br>
+				autofocus="autofocus" />
 			<form:select path="valgtTidsperiode" items="${tidsperioder}"
-				onchange="document.getElementById('filterForm').submit()" />
-			<form:select path="valgtNasjonalitet" items="${nasjonaliteter}"
 				onchange="document.getElementById('filterForm').submit()" />
 			<iframe id="avspiller" src="https://embed.spotify.com/?uri=${spotifyURI}"
 				width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
