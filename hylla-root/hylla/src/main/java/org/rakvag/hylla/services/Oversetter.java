@@ -46,7 +46,6 @@ public class Oversetter {
 		Float popularitet = 0F;
 		for (SpotifyTrack track : spotifyAlbum.getTracks()) {
 			Spor spor = oversettSpotifyTrack(track);
-			spor.setAlbum(album);
 			albumLengde += spor.getLengde();
 			popularitet += spor.getPopularitet();
 			album.getSpor().add(spor);

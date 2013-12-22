@@ -15,6 +15,4 @@ public interface AlbumService extends SpotifyService {
 	Set<Spor> hentSporenetilAlbumFraSpotify(String albumsSpotifyURI);
 
 	Album lagreAlbum(Album album);
-
-	void kjoerMasseInnlesning(List<String> linker, long hylleId);
 }

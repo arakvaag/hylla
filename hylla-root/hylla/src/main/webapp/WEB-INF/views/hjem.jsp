@@ -5,7 +5,8 @@
 <head>
 	<title>Hylla - hjem</title>
     <c:set var="url">${pageContext.request.requestURL}</c:set>
-    <base href="${fn:substring(url, 0, fn:length(url) - fn:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
+    <base href="${fn:substring(url, 0, fn:length(url) - 
+    	fn:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
 	<link rel="stylesheet" href="resources/main.css" type="text/css" />
 	<link rel="shortcut icon" href="resources/icon.png" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -27,8 +28,7 @@
 							value=""></td>
 					</tr>
 				</table>
-				<input id="gjoersoek" type="submit" value="Søk i Spotify"> <a
-					href="album/masseinnlasting">Masseinnlasting</a>
+				<input id="gjoersoek" type="submit" value="Søk i Spotify">
 			</div>
 		</form>
 
@@ -39,7 +39,7 @@
 			<form:select path="valgtTidsperiode" items="${tidsperioder}"
 				onchange="document.getElementById('filterForm').submit()" />
 			<iframe id="avspiller" src="https://embed.spotify.com/?uri=${spotifyURI}"
-				width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+				width="270" height="350" seamless></iframe>
 		</form:form>
 
 	</div>
@@ -55,7 +55,8 @@
 				<c:if test="${album.erPaaHylle == false}">
 					<a href="album/leggTilPaaHylle?albumId=${album.id}">Legg til på hylla</a> 
 				</c:if><br>
-				<span class="artistnavn"><a	href="artist/?artistId=${album.artist.id}"> ${album.artist.kortnavn}</a></span><br>
+				<span class="artistnavn"><a	href="artist/?artistId=${album.artist.id}"> 
+					${album.artist.kortnavn}</a></span><br>
 				<a href="album/?albumId=${album.id}">${album.kortnavn}</a><br> 
 			</div>
 		</c:forEach>

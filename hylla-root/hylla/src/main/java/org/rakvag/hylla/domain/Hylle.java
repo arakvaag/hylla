@@ -13,7 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 @Entity
-public class Hylle implements Entitet {
+public class Hylle implements DBEntitet {
 
 	@Id
 	@GeneratedValue

@@ -1,6 +1,5 @@
 package org.rakvag.hylla.web;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -88,10 +87,4 @@ public class AlbumController {
 		return new ModelAndView("masseinnlasting", "command", new MasseinnlastingForm());
 	}
 
-	@RequestMapping(value = "/album/kjoermasseinnlasting", method = RequestMethod.POST)
-	public ModelAndView kjoerMasseinnlasting(@ModelAttribute("command") MasseinnlastingForm form) {
-		List<String> linker = Arrays.asList(form.getData().split("\r\n"));
-		albumService.kjoerMasseInnlesning(linker, sesjonsdata.getHylleId());
-		return new ModelAndView("redirect:/");
-	}
 }

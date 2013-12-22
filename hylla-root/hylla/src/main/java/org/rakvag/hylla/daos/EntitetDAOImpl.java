@@ -6,9 +6,9 @@ import java.lang.reflect.Type;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.rakvag.hylla.domain.Entitet;
+import org.rakvag.hylla.domain.DBEntitet;
 
-public abstract class EntitetDAOImpl<T extends Entitet> implements EntitetDAO<T> {
+public abstract class EntitetDAOImpl<T extends DBEntitet> implements EntitetDAO<T> {
 
 	@PersistenceContext
 	protected EntityManager em;

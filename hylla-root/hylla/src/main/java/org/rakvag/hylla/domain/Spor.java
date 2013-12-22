@@ -1,35 +1,13 @@
 package org.rakvag.hylla.domain;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
-@Entity
-public class Spor implements SpotifyEntitet {
+public class Spor {
 
-	@Id
-	@GeneratedValue
-	private Long id;
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "albumId", nullable = false)
-	private Album album;
-
-	@Column(nullable = false)
 	private String navn;
-	@Column(nullable = false, unique = true)
 	private String spotifyURI;
-	@Column(nullable = false)
 	private int spornummer;
-	@Column(nullable = false)
 	private int disknummer;
-	@Column(nullable = true)
 	private Float popularitet;
-	@Column(nullable = true)
 	private Float lengde;
 
 	public String getLengdeFormatert() {
@@ -52,14 +30,6 @@ public class Spor implements SpotifyEntitet {
 			return true;
 
 		return false;
-	}
-
-	public Album getAlbum() {
-		return album;
-	}
-
-	public void setAlbum(Album album) {
-		this.album = album;
 	}
 
 	public String getNavn() {
@@ -100,10 +70,6 @@ public class Spor implements SpotifyEntitet {
 
 	public void setLengde(Float lengde) {
 		this.lengde = lengde;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public String getSpotifyURI() {

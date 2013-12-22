@@ -1,5 +1,5 @@
 package org.rakvag.hylla.domain;
 
-public interface Entitet {
+public interface DBEntitet {
 	Long getId();
 }

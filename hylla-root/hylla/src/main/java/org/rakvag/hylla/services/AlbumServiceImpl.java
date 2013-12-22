@@ -2,7 +2,6 @@ package org.rakvag.hylla.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.rakvag.hylla.daos.SporDAO;
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.domain.Spor;
@@ -27,8 +25,6 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 	private final static int MAX_ANTALL_ALBUM_FRA_SOEK = 28;
 	private static Logger logger = LoggerFactory.getLogger(AlbumServiceImpl.class.getName());
 
-	@Inject
-	private SporDAO sporDAO;
 	@Inject
 	private SpotifyAPI spotifyAPI;
 	@Inject
@@ -105,55 +101,6 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 		return albumDAO.lagre(album);
 	}
 
-	@Override
-	public void kjoerMasseInnlesning(List<String> linker, long hylleId) {
-		linker = new ArrayList<String>(linker);
-		Collections.shuffle(linker);
-
-		Set<String> sporURIerIkkeSlaattOpp = new HashSet<String>();
-		Set<String> albumURIerIkkeSlaattOpp = new HashSet<String>();
-		Map<String, Sjanger> artistersSjanger = artistService.hentArtistersDefaultSjanger();
-
-		for (String link : linker) {
-			String uri = lagSpotifyURIFraTrackLink(link);
-			if (!sporDAO.finnesDenneIDB(uri))
-				sporURIerIkkeSlaattOpp.add(uri);
-
-			if (sporURIerIkkeSlaattOpp.size() >= 25) {
-				Set<String> albumURIene = slaaOppAlbumURIerForSporene(sporURIerIkkeSlaattOpp);
-				for (String albumURI : albumURIene) {
-					if (!albumDAO.finnesDenneIDB(albumURI))
-						albumURIerIkkeSlaattOpp.add(albumURI);
-				}
-				sporURIerIkkeSlaattOpp = new HashSet<String>();
-			}
-
-			if (albumURIerIkkeSlaattOpp.size() >= 5) {
-				Collection<SpotifyAlbum> spotifyAlbumene = spotifyAPI.hentAlbumPaaSpotifyURIer(albumURIerIkkeSlaattOpp,
-						10);
-				for (SpotifyAlbum spotifyAlbum : spotifyAlbumene) {
-					Sjanger sjanger = Sjanger.IKKE_SATT;
-					if (artistersSjanger.containsKey(spotifyAlbum.getArtistid()))
-						sjanger = artistersSjanger.get(spotifyAlbum.getArtistid());
-					Album album = Oversetter.oversettSpotifyAlbum(spotifyAlbum, sjanger);
-					albumDAO.lagre(album);
-					hylleService.leggTilAlbumPaaHylle(album.getId(), hylleId);
-				}
-				albumURIerIkkeSlaattOpp = new HashSet<String>();
-			}
-		}
-		// Få med siste rest
-		Collection<SpotifyAlbum> spotifyAlbumene = spotifyAPI.hentAlbumPaaSpotifyURIer(albumURIerIkkeSlaattOpp, 10);
-		for (SpotifyAlbum spotifyAlbum : spotifyAlbumene) {
-			Sjanger sjanger = Sjanger.IKKE_SATT;
-			if (artistersSjanger.containsKey(spotifyAlbum.getArtistid()))
-				sjanger = artistersSjanger.get(spotifyAlbum.getArtistid());
-			Album album = Oversetter.oversettSpotifyAlbum(spotifyAlbum, sjanger);
-			albumDAO.lagre(album);
-			hylleService.leggTilAlbumPaaHylle(album.getId(), hylleId);
-		}
-	}
-
 	private List<String> finnHvilkeAlbumSomSkalMedISoeketreffene(List<SpotifyAlbum> albumFraSoek) {
 		List<String> URIerPaaAlbumSomSkalHentesOpp = new ArrayList<String>();
 		for (SpotifyAlbum albumet : albumFraSoek) {
@@ -173,23 +120,6 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 				finnesIDB.add(uri);
 		}
 		return finnesIDB;
-	}
-
-	private String lagSpotifyURIFraTrackLink(String link) {
-		final String TRACK_PREFIKS = "http://open.spotify.com/track/";
-		if (!link.startsWith(TRACK_PREFIKS))
-			return null;
-		return "spotify:track:" + link.substring(TRACK_PREFIKS.length());
-	}
-
-	private Set<String> slaaOppAlbumURIerForSporene(Set<String> sporURIer) {
-		Set<String> albumURIene = new HashSet<String>();
-
-		Collection<SpotifyTrack> sporene = spotifyAPI.hentTracksPaaSpotifyURIer(sporURIer, 10).values();
-		for (SpotifyTrack spotifyTrack : sporene)
-			albumURIene.add(spotifyTrack.getAlbum().getHref());
-
-		return albumURIene;
 	}
 
 }

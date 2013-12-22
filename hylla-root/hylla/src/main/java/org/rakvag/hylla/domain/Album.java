@@ -21,7 +21,7 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.StringUtils;
 
 @Entity
-public class Album implements SpotifyEntitet, Entitet, Comparable<Album> {
+public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 
 	private final static int MAX_LENGDE_KORTNAVN = 20;
 	private final static int MIN_LENGDE_VANLIG_ALBUM = 20 * 60;

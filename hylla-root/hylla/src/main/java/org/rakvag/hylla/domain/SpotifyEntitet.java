@@ -1,6 +1,6 @@
 package org.rakvag.hylla.domain;
 
-public interface SpotifyEntitet extends Entitet {
+public interface SpotifyEntitet extends DBEntitet {
 
 	String getSpotifyURI();
 
