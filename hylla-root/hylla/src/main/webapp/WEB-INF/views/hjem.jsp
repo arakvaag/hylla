@@ -13,7 +13,9 @@
 	<script src="resources/hylla.js"></script>
 </head>
 <body>
-	<div class="soekespilledel">
+
+	<div id="soekespilledel">
+		
 		<form id="soekForm" method="GET" action="album/utfoerSoek">
 			<div class="element">
 				<table class="soeketabell">
@@ -32,19 +34,22 @@
 			</div>
 		</form>
 
+		<iframe id="avspiller" src="https://embed.spotify.com/?uri=${spotifyURI}"
+			width="270" height="350" seamless></iframe>
+
+	</div>
+
+
+	<div id="hylledel">
+	
 		<form:form id="filterForm" method="POST" action="endreFilter">
 			<form:select path="valgtSjanger" items="${sjangre}"
 				onchange="document.getElementById('filterForm').submit()"
 				autofocus="autofocus" />
 			<form:select path="valgtTidsperiode" items="${tidsperioder}"
 				onchange="document.getElementById('filterForm').submit()" />
-			<iframe id="avspiller" src="https://embed.spotify.com/?uri=${spotifyURI}"
-				width="270" height="350" seamless></iframe>
 		</form:form>
 
-	</div>
-
-	<div class="hylledel">
 		<c:forEach var="album" items="${albumene}">
 			<div class="album">
 				<img alt="${album.artist.navn} - ${album.navn}" title="${album.artist.navn} - ${album.navn}"
@@ -60,6 +65,7 @@
 				<a href="album/?albumId=${album.id}">${album.kortnavn}</a><br> 
 			</div>
 		</c:forEach>
+		
 	</div>
 
 </body>

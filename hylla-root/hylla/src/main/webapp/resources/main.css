@@ -1,3 +1,5 @@
+/* START: FELLES-KLASSER */
+
 a:link {
 	text-decoration: none;
 }
@@ -14,36 +16,15 @@ a:active {
 	text-decoration: underline;
 }
 
-.soekespilledel {
-	position: fixed;
-	width: 300px;
-	float: left;
-	padding-left: 10px;
-}
-
-#avspiller {
-	padding-top: 10px;
-}
-
-.hylledel {
-	margin-left: 300px;
-	max-width: 1100px;
-}
-
-.toppmeny {
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
-
 .album {
 	float: left;
 	text-align: center;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 70%;
-	padding-top: 10px;
+	padding-top: 0px;
 	padding-right: 35px;
-	padding-bottom: 5px;
-	padding-left: 5px;
+	padding-bottom: 10px;
+	padding-left: 0px;
 }
 
 .album img {
@@ -58,16 +39,6 @@ a:active {
 	font-weight: bold;
 }
 
-#detaljer {
-	margin-left: 10px;
-}
-
-#detaljerVenstre {
-	position: absolute;
-	width: 320px;
-	margin-top: 15px;
-}
-
 .stortbilde {
 	width: 300px;
 	height: 300px;
@@ -76,10 +47,54 @@ a:active {
 	box-shadow: 1px 3px 8px grey;
 }
 
-#detaljerHoyre {
+.toppMeny {
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+ul {
+	list-style-type: none;
+	padding-left: 0;
+	-webkit-margin-before: 0px;
+	-webkit-margin-after: 0;
+}
+
+/* SLUTT: FELLES-KLASSER */
+
+
+
+/* START: HJEM.JSP */
+
+#soekespilledel {
+	position: fixed;
+	width: 300px;
+	float: left;
+	padding-left: 10px;
+}
+
+#hylledel {
+	margin-left: 300px;
+	max-width: 1100px;
+}
+
+/* SLUTT: HJEM.JSP */
+
+
+
+/* START: ALBUM.JSP */
+
+#albumVenstre {
 	position: absolute;
-	margin-top: 20px;
-	margin-left: 350px;
+	top: 40px;
+	left: 10px;
+	text-align: center;
+}
+
+#albumHoyre {
+	position: absolute;
+	top: 40px;
+	left: 350px;
 }
 
 #tittel {
@@ -101,30 +116,35 @@ a:active {
 	margin-left: 10px;
 }
 
-#artistVenstredel {
+/* SLUTT: ALBUM.JSP */
+
+
+
+/* START: ARTIST.JSP */
+
+#artistVenstre {
 	position: absolute;
-	margin-top: 10px;
+	top: 40px;
+	left: 10px;
 	text-align: center;
 }
 
-#artistHylledel {
+#artistHoyre {
 	position: absolute;
-	margin-left: 350px;
+	top: 40px;
+	left: 350px;
 	max-width: 1000px;
 }
 
-.hoveddelSide {
+/* START: ARTIST.JSP */
+
+
+
+/* START: SOEK.JSP */
+
+.soekhoveddelSide {
 	margin-left: 10px;
 	max-width: 1300px;
 }
 
-.albumNedreVenstreTabell {
-	text-align: center;
-}
-
-.albumNedreVenstreTabell table {
-	width: 100%;
-}
-
-.albumNedreVenstreTabell td {
-}
+/* START: SOEK.JSP */

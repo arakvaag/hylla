@@ -10,18 +10,18 @@
 	<link rel="shortcut icon" href="resources/icon.png" />
 </head>
 <body>
-	<div id="artist">
+	<div class="toppMeny">
 		<a href="">Hjem</a>
-
-		<div id="artistVenstredel">
-			<div class="stortbilde">
-				<img alt="${artist.navn}" src="${artist.bildelink}">
-			</div><br> 
-			<span class="artistnavn">${artist.navn}</span>
-		</div>
 	</div>
-
-	<div id="artistHylledel">
+		
+	<div id="artistVenstre">
+		<ul>
+			<li class="stortbilde"><img alt="${artist.navn}" src="${artist.bildelink}"></li>
+			<li><span class="artistnavn">${artist.navn}</span></li>
+		</ul>
+	</div>
+	
+	<div id="artistHoyre">
 		<c:forEach var="album" items="${albumene}">
 			<div class="album">
 				<a href="aapne?spotifyURI=${album.spotifyURI}">

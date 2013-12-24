@@ -9,12 +9,8 @@
 	<link rel="shortcut icon" href="resources/icon.png" />
 </head>
 <body>
-	<script type="text/javascript">
 	
-	
-	
-	</script>
-	<div class="toppmeny">
+	<div id="soektoppmeny">
 		<form method="GET" action="album/utfoerSoek">
 			<div class="element">
 				<a href="">Hjem</a>
@@ -28,7 +24,7 @@
 		</form>
 	</div>
 
-	<div class="hoveddelSide">
+	<div id="soekhoveddelSide">
 		<div class="soekeResultater">
 			<c:forEach var="album" items="${albumliste}">
 				<div class="album">
@@ -48,5 +44,6 @@
 			</c:forEach>
 		</div>
 	</div>
+	
 </body>
 </html>
