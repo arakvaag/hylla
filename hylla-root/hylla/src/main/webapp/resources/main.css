@@ -78,6 +78,11 @@ ul {
 	max-width: 1100px;
 }
 
+#filterform {
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
 /* SLUTT: HJEM.JSP */
 
 
@@ -106,10 +111,6 @@ ul {
 
 #spor {
 	margin-top: 0px;
-}
-
-#sjanger {
-	margin-top: 10px;
 }
 
 #artist {

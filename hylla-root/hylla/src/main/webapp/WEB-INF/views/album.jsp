@@ -32,14 +32,14 @@
 						onchange="document.getElementById('albumForm').submit()"
 						autofocus="true" />
 					<form:hidden path="albumId" />
+					<c:if test="${album.erPaaHylle}">
+						<a href="album/fjernFraHylle?albumId=${album.id}">Fjern fra hylla</a>
+					</c:if>
+					<c:if test="${album.erPaaHylle == false}">
+						<a href="album/leggTilPaaHylle?albumId=${album.id}">Legg til på hylla</a> 
+					</c:if><br>
 				</form:form>
 			</div>
-			<c:if test="${album.erPaaHylle}">
-				<a href="album/fjernFraHylle?albumId=${album.id}">Fjern fra hylla</a>
-			</c:if>
-			<c:if test="${album.erPaaHylle == false}">
-				<a href="album/leggTilPaaHylle?albumId=${album.id}">Legg til på hylla</a> 
-			</c:if><br>
 		</div>
 	</div>
 	
