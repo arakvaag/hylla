@@ -84,9 +84,10 @@ ul {
 #avspiller {
 	width: 270px;
 	height: 350px;
+	padding-left: 10px;
 }
 
-#filterform {
+#filter {
 	position: fixed;
 	background-color: white;
 	top: 0px;
@@ -118,7 +119,6 @@ ul {
 	top: 50px;
 	left: 300px;
 	max-width: 1100px;
-	background-color: blue;
 }
 
 /* SLUTT: HJEM.JSP */
@@ -132,6 +132,7 @@ ul {
 	top: 40px;
 	left: 10px;
 	text-align: center;
+	width: 330px;
 }
 
 #albumHoyre {
@@ -166,6 +167,10 @@ ul {
 	top: 40px;
 	left: 10px;
 	text-align: center;
+}
+
+#artistTittel {
+	margin-top: 10px;
 }
 
 #artistHoyre {

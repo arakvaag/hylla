@@ -15,6 +15,6 @@
 		<span class="artistnavn"><a	href="artist/?artistId=${album.artist.id}"> 
 			${album.artist.kortnavn}</a></span><br>
 		<a href="album/?albumId=${album.id}">${album.kortnavn}</a><br> 
-		<c:if test="${visAarOgLengde}">${album.aar} - ${album.lengdeFormatert}</c:if>
+		<c:if test="${visAarOgLengdePaaAlbum}">${album.aar} - ${album.lengdeFormatert}</c:if>
 	</div>
 </c:forEach>

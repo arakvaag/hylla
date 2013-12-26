@@ -36,9 +36,9 @@ public class AlbumController {
 		List<Album> albumliste = albumService.soekEtterAlbumISpotify(artistnavn, albumnavn,
 				"true".equals(taMedKorteAlbum));
 		for (Album album : albumliste)
-			album.setErPaaHylle(sesjonsdata.getHylleId());
+			album.setErPaaHylleUtifraHylleId(sesjonsdata.getHylleId());
 		mv.addObject("albumliste", albumliste);
-		mv.addObject("visAarOgLengde", true);
+		mv.addObject("visAarOgLengdePaaAlbum", true);
 		return mv;
 	}
 
@@ -60,7 +60,7 @@ public class AlbumController {
 	public ModelAndView aapne(@ModelAttribute("albumId") String albumId) {
 		Album album = albumService.hentAlbum(Long.parseLong(albumId));
 		album.setSpor(albumService.hentSporenetilAlbumFraSpotify(album.getSpotifyURI()));
-		album.setErPaaHylle(sesjonsdata.getHylleId());
+		album.setErPaaHylleUtifraHylleId(sesjonsdata.getHylleId());
 		ModelAndView mv = new ModelAndView("album", "album", album);
 		DetaljerForm form = new DetaljerForm();
 		form.setSjanger(album.getSjanger().name());

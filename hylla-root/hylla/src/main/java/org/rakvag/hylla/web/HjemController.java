@@ -3,10 +3,8 @@ package org.rakvag.hylla.web;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -20,6 +18,7 @@ import org.rakvag.hylla.services.HylleService;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -45,28 +44,26 @@ public class HjemController {
 	private Sesjonsdata sesjonsdata;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView hjem() {
+	public ModelAndView hjem(@RequestHeader("User-Agent") String userAgent) {
 		Hylle hylle = hyllaService.hentHylle(sesjonsdata.getHylleId());
-
-		Set<Album> albumene = hylle.getAlbumene();
-		albumene = filtrerAlbumene(albumene, hylle.getValgtSjanger(), hylle.getValgtTidsperiode());
-		List<Album> sortertListeAvAlbum = lagSortertListMedAlbum(albumene);
-		for (Album album : sortertListeAvAlbum)
-			album.setErPaaHylle(sesjonsdata.getHylleId());
 
 		Map<String, String> sjangre = Sjanger.lagSjangerMap();
 		sjangre.put(KODE_ALLE_SJANGRE, "Alle sjangre");
 		Map<String, String> tidsperioder = Tidsperiode.lagTidsperiodeMap();
 		tidsperioder.put(KODE_ALLE_TIDSPERIODER, "Alle år");
 		HjemFilterForm filterForm = new HjemFilterForm();
-		filterForm
-				.setValgtSjanger(hylle.getValgtSjanger() != null ? hylle.getValgtSjanger().name() : KODE_ALLE_SJANGRE);
+		filterForm.setValgtSjanger(hylle.getValgtSjanger() != null ? hylle.getValgtSjanger().name() : KODE_ALLE_SJANGRE);
 		filterForm.setValgtTidsperiode(hylle.getValgtTidsperiode() != null ? hylle.getValgtTidsperiode().name()
 				: KODE_ALLE_TIDSPERIODER);
 
-		ModelAndView mv = new ModelAndView("hjem");
-		mv.addObject("albumene", sortertListeAvAlbum);
-		mv.addObject("visAarOgLengde", false);
+		ModelAndView mv = null;
+		if (userAgent.contains("Android"))
+			mv = new ModelAndView("mobilhjem");
+		else 
+			mv = new ModelAndView("hjem");
+		
+		mv.addObject("albumene", lagAlbumlisteForView(hylle));
+		mv.addObject("visAarOgLengdePaaAlbum", false);
 		mv.addObject("command", filterForm);
 		mv.addObject("spotifyURI", hylle.getSpotifyURIAapentAlbum());
 		mv.addObject("sjangre", sjangre);
@@ -76,14 +73,28 @@ public class HjemController {
 	}
 
 	@RequestMapping(value = "/endreFilter", method = RequestMethod.POST)
-	public String filtrer(@ModelAttribute("command") HjemFilterForm filterForm, RedirectAttributes redirAttr) {
-		oppdaterHylle(hyllaService.hentHylle(sesjonsdata.getHylleId()), filterForm, null);
-		return "redirect:/";
+	public ModelAndView filtrer(@RequestHeader("User-Agent") String userAgent, 
+								@ModelAttribute("sjanger") String sjanger, 
+								@ModelAttribute("tidsperiode") String tidsperiode) {
+		
+		Hylle hylle = hyllaService.hentHylle(sesjonsdata.getHylleId());
+		HjemFilterForm filterForm = new HjemFilterForm();
+		filterForm.setValgtSjanger(sjanger);
+		filterForm.setValgtTidsperiode(tidsperiode);
+		hylle = oppdaterHylle(hylle, filterForm.getValgtSjanger(), filterForm.getValgtTidsperiode(), null);
+		
+		ModelAndView mv = null;
+		if (userAgent.contains("Android"))
+			mv = new ModelAndView("_mobilhylle");
+		else 
+			mv = new ModelAndView("_hylle");
+		mv.addObject("albumene", lagAlbumlisteForView(hylle));
+		return mv;
 	}
 
 	@RequestMapping(value = "/aapne", method = RequestMethod.GET)
 	public String aapneMusikk(@ModelAttribute("spotifyURI") String spotifyURI, RedirectAttributes redirAttr) {
-		oppdaterHylle(hyllaService.hentHylle(sesjonsdata.getHylleId()), null, spotifyURI);
+		oppdaterHylle(hyllaService.hentHylle(sesjonsdata.getHylleId()), null, null, spotifyURI);
 		return "redirect:/";
 	}
 
@@ -95,24 +106,19 @@ public class HjemController {
 		return "";
 	}
 
-	private Hylle oppdaterHylle(Hylle hylle, HjemFilterForm filterForm, String spotifyURIAapentAlbum) {
-		if (filterForm != null) {
-			String valgtSjanger = filterForm.getValgtSjanger();
-			if (valgtSjanger != null) {
-				if (KODE_ALLE_SJANGRE.equals(valgtSjanger))
-					hylle.setValgtSjanger(null);
-				else
-					hylle.setValgtSjanger(Sjanger.valueOf(valgtSjanger));
-			}
+	private Hylle oppdaterHylle(Hylle hylle, String valgtSjanger, String valgtTidsperiode, String spotifyURIAapentAlbum) {
+		if (valgtSjanger != null) {
+			if (KODE_ALLE_SJANGRE.equals(valgtSjanger))
+				hylle.setValgtSjanger(null);
+			else
+				hylle.setValgtSjanger(Sjanger.valueOf(valgtSjanger));
+		}
 
-			String valgtTidsperiode = filterForm.getValgtTidsperiode();
-			if (valgtTidsperiode != null) {
-				if (valgtTidsperiode == null || KODE_ALLE_TIDSPERIODER.equals(valgtTidsperiode))
-					hylle.setValgtTidsperiode(null);
-				else
-					hylle.setValgtTidsperiode(Tidsperiode.valueOf(valgtTidsperiode));
-			}
-
+		if (valgtTidsperiode != null) {
+			if (valgtTidsperiode == null || KODE_ALLE_TIDSPERIODER.equals(valgtTidsperiode))
+				hylle.setValgtTidsperiode(null);
+			else
+				hylle.setValgtTidsperiode(Tidsperiode.valueOf(valgtTidsperiode));
 		}
 
 		hylle.setSpotifyURIAapentAlbum(!StringUtils.isBlank(spotifyURIAapentAlbum) ? spotifyURIAapentAlbum : hylle
@@ -123,28 +129,25 @@ public class HjemController {
 		return hylle;
 	}
 
-	private Set<Album> filtrerAlbumene(Set<Album> favorittene, Sjanger sjanger, Tidsperiode tidsperiode) {
-		Set<Album> filtrert = new HashSet<Album>();
+	private List<Album> lagAlbumlisteForView(Hylle hylle) {
+		List<Album> behandletListe = new ArrayList<Album>();
+		Sjanger valgtSjanger = hylle.getValgtSjanger();
+		Tidsperiode valgtTidsperiode = hylle.getValgtTidsperiode();
 
-		for (Album album : favorittene) {
+		for (Album album : hylle.getAlbumene()) {
 			boolean skalMed = true;
 
-			if (sjanger != null && sjanger != album.getSjanger())
+			if (valgtSjanger != null && valgtSjanger != album.getSjanger())
 				skalMed = false;
 
-			if (tidsperiode != null && tidsperiode != Tidsperiode.hentTidsperiode(album.getAar()))
+			if (valgtTidsperiode != null && valgtTidsperiode != Tidsperiode.hentTidsperiode(album.getAar()))
 				skalMed = false;
 
 			if (skalMed)
-				filtrert.add(album);
+				behandletListe.add(album);
 		}
 
-		return filtrert;
-	}
-
-	private List<Album> lagSortertListMedAlbum(Set<Album> albumene) {
-		List<Album> albumeneList = new ArrayList<Album>(albumene);
-		Collections.sort(albumeneList, new Comparator<Album>() {
+		Collections.sort(behandletListe, new Comparator<Album>() {
 			@Override
 			public int compare(Album a1, Album a2) {
 				if (a1 == null && a2 == null)
@@ -162,7 +165,11 @@ public class HjemController {
 					return a1.getNavn().toUpperCase().compareTo(a2.getNavn().toUpperCase());
 			}
 		});
-		return albumeneList;
+
+		for (Album album : behandletListe)
+			album.setErPaaHylle(true);
+
+		return behandletListe;
 	}
 
 }

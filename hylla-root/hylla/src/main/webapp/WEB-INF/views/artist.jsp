@@ -18,7 +18,7 @@
 	<div id="artistVenstre">
 		<ul>
 			<li class="stortbilde"><img alt="${artist.navn}" src="${artist.bildelink}"></li>
-			<li><span class="artistnavn">${artist.navn}</span></li>
+			<li id="artistTittel" class="artistnavn">${artist.navn}</li>
 		</ul>
 	</div>
 	

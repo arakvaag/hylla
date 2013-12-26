@@ -16,6 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 public class Artist implements SpotifyEntitet {
 
 	private final static int MAX_LENGDE_KORTNAVN = 19;
+	private final static int MAX_LENGDE_MOBILNAVN = 17;
+	
 
 	@Id
 	@GeneratedValue
@@ -43,6 +45,13 @@ public class Artist implements SpotifyEntitet {
 
 		return navn;
 	}
+
+	public String getMobilnavn() {
+		if (!StringUtils.isBlank(navn) && navn.length() > MAX_LENGDE_MOBILNAVN)
+			return navn.substring(0, MAX_LENGDE_MOBILNAVN - 3).trim() + "...";
+
+		return navn;
+	}	
 
 	public Long getId() {
 		return id;

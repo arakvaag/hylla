@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 
 	private final static int MAX_LENGDE_KORTNAVN = 20;
+	private final static int MAX_LENGDE_MOBILNAVN = 18;
 	private final static int MIN_LENGDE_VANLIG_ALBUM = 20 * 60;
 
 	@Id
@@ -52,7 +53,6 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 	@Column(nullable = false)
 	private float popularitet;
 
-	//@OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
 	@Transient
 	private Set<Spor> spor;
 	@Transient
@@ -64,6 +64,14 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 
 		return navn;
 	}
+	
+	public String getMobilnavn() {
+		String retur = navn;
+		if (!StringUtils.isBlank(navn) && navn.length() > MAX_LENGDE_MOBILNAVN)
+			retur = navn.substring(0, MAX_LENGDE_MOBILNAVN - 3).trim() + "...";
+
+		return retur;
+	}	
 
 	public List<Spor> getSorterteSpor() {
 		List<Spor> sorterteSpor = new ArrayList<Spor>(spor);
@@ -103,7 +111,11 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 		}
 	}
 
-	public void setErPaaHylle(long hylleId) {
+	public void setErPaaHylle(boolean erPaaHylle) {
+		this.erPaaHylle = erPaaHylle;
+	}
+	
+	public void setErPaaHylleUtifraHylleId(long hylleId) {
 		erPaaHylle = false;
 		if (hyller != null) {
 			for (Hylle hylle : hyller) {

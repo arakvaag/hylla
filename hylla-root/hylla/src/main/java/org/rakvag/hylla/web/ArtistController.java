@@ -39,7 +39,7 @@ public class ArtistController {
 		logger.debug("Starter filtrering og sortering av artistens " + artist.getAlbum().size() + " album");
 		for (Album album : artist.getAlbum()) {
 			if ((!album.erEtKortAlbum()) && album.isTilgjengeligINorge()) {
-				album.setErPaaHylle(sesjonsdata.getHylleId());
+				album.setErPaaHylleUtifraHylleId(sesjonsdata.getHylleId());
 				albumene.add(album);
 			}
 		}

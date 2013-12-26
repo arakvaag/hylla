@@ -39,14 +39,11 @@
 
 	</div>
 
-	<form:form id="filterform" method="POST" action="endreFilter">
-		<form:select path="valgtSjanger" items="${sjangre}"
-			onchange="document.getElementById('filterform').submit()"
-			autofocus="autofocus" />
-		<form:select path="valgtTidsperiode" items="${tidsperioder}"
-			onchange="document.getElementById('filterform').submit()" />
+	<form:form id="filter">
+		<form:select id="sjanger" autofocus="autofocus" path="valgtSjanger" items="${sjangre}" onchange="oppdaterFiltrering()"/>
+		<form:select id="tidsperiode" path="valgtTidsperiode" items="${tidsperioder}" onchange="oppdaterFiltrering()"/>
 	</form:form>
-
+	
 	<div id="myk_kant"></div>
 
 	<div id="albumene">
