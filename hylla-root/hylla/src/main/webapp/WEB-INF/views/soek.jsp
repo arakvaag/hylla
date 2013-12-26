@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Hylla - søk album</title>
@@ -25,24 +26,7 @@
 	</div>
 
 	<div id="soekhoveddelSide">
-		<div class="soekeResultater">
-			<c:forEach var="album" items="${albumliste}">
-				<div class="album">
-					<a href="aapne?spotifyURI=${album.spotifyURI}">
-						<img alt="${album.artist.navn} - ${album.navn}" title="${album.artist.navn} - ${album.navn}"
-							src="${album.coverartlink}"></a><br> 
-					<c:if test="${album.erPaaHylle}">
-						<a href="album/fjernFraHylle?albumId=${album.id}">Fjern fra hylla</a>
-					</c:if>
-					<c:if test="${album.erPaaHylle == false}">
-						<a href="album/leggTilPaaHylle?albumId=${album.id}">Legg til på hylla</a> 
-					</c:if><br>
-					<span class="artistnavn"><a	href="artist/?artistId=${album.artist.id}"> ${album.artist.kortnavn}</a></span><br>
-					<a href="album/?albumId=${album.id}">${album.kortnavn}</a><br> 
-					${album.aar} - ${album.lengdeFormatert}
-				</div>
-			</c:forEach>
-		</div>
+		<jsp:include page="_hylle.jsp"></jsp:include>
 	</div>
 	
 </body>

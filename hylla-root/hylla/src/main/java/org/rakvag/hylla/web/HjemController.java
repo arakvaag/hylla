@@ -66,6 +66,7 @@ public class HjemController {
 
 		ModelAndView mv = new ModelAndView("hjem");
 		mv.addObject("albumene", sortertListeAvAlbum);
+		mv.addObject("visAarOgLengde", false);
 		mv.addObject("command", filterForm);
 		mv.addObject("spotifyURI", hylle.getSpotifyURIAapentAlbum());
 		mv.addObject("sjangre", sjangre);

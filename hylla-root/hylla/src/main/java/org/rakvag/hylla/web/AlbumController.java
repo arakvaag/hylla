@@ -38,6 +38,7 @@ public class AlbumController {
 		for (Album album : albumliste)
 			album.setErPaaHylle(sesjonsdata.getHylleId());
 		mv.addObject("albumliste", albumliste);
+		mv.addObject("visAarOgLengde", true);
 		return mv;
 	}
 
