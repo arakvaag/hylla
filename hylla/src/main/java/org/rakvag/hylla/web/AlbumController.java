@@ -32,12 +32,14 @@ public class AlbumController {
 	public ModelAndView utfoerSoek(@ModelAttribute("artist") String artistnavn,
 			@ModelAttribute("album") String albumnavn, @ModelAttribute("taMedKorteAlbum") String taMedKorteAlbum,
 			RedirectAttributes redirAttr) {
-		ModelAndView mv = new ModelAndView("soek");
+		
 		List<Album> albumliste = albumService.soekEtterAlbumISpotify(artistnavn, albumnavn,
 				"true".equals(taMedKorteAlbum));
 		for (Album album : albumliste)
 			album.setErPaaHylleUtifraHylleId(sesjonsdata.getHylleId());
-		mv.addObject("albumliste", albumliste);
+
+		ModelAndView mv = new ModelAndView("soek");
+		mv.addObject("albumene", albumliste);
 		mv.addObject("visAarOgLengdePaaAlbum", true);
 		return mv;
 	}

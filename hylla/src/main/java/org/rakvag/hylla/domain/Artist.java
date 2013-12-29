@@ -7,8 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,9 +20,9 @@ public class Artist implements SpotifyEntitet {
 	private final static int MAX_LENGDE_KORTNAVN = 19;
 	private final static int MAX_LENGDE_MOBILNAVN = 17;
 	
-
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name="album_id_seq", sequenceName="album_id_seq", allocationSize=10)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="album_id_seq")	
 	private Long id;
 
 	@Column(nullable = false)

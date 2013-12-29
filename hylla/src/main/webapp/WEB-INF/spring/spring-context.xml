@@ -20,8 +20,8 @@
 	<context:annotation-config />
 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/hyllaDB" />
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://localhost/hyllaDB" />
 		<property name="username" value="hyllaDB" />
 		<property name="password" value="hyllaDB" />
 	</bean>
@@ -39,13 +39,12 @@
 		</property>
 		<property name="jpaProperties">
 			<props>
-				<prop key="hibernate.hbm2ddl.auto">validate</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
 			</props>
 		</property>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-				<property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect" />
-				<property name="database" value="MYSQL" />
+				<property name="databasePlatform" value="org.hibernate.dialect.PostgreSQLDialect" />
 				<property name="showSql" value="false" />
 			</bean>
 		</property>

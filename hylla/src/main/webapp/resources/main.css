@@ -186,8 +186,15 @@ ul {
 
 /* START: SOEK.JSP */
 
-.soekhoveddelSide {
+#soekmeny {
 	margin-left: 10px;
+	margin-bottom: 10px;
+	max-width: 1300px;
+}
+
+#soekhoveddelSide {
+	margin-left: 10px;
+	margin-bottom: 10px;
 	max-width: 1300px;
 }
 

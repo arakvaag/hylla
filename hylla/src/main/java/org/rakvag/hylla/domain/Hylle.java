@@ -8,15 +8,18 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 public class Hylle implements DBEntitet {
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name="album_id_seq", sequenceName="album_id_seq", allocationSize=10)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="album_id_seq")	
 	private Long id;
 
 	@Column(unique = true, nullable = false)

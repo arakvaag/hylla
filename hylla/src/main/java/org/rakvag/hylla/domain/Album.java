@@ -12,10 +12,12 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,8 +30,10 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 	private final static int MIN_LENGDE_VANLIG_ALBUM = 20 * 60;
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name="album_id_seq", sequenceName="album_id_seq", allocationSize=10)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="album_id_seq")	
 	private Long id;
+
 	@ManyToOne()
 	@JoinColumn(name = "artistId", nullable = false)
 	private Artist artist;

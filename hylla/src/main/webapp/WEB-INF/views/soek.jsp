@@ -11,11 +11,12 @@
 </head>
 <body>
 	
-	<div id="soektoppmeny">
+	<div class="toppMeny">
+		<a href="">Hjem</a>
+	</div>
+
+	<div id="soekmeny">
 		<form method="GET" action="album/utfoerSoek">
-			<div class="element">
-				<a href="">Hjem</a>
-			</div>
 			<div class="element">
 				<input type="text" name="artist" value="" autofocus="autofocus"> <input type="text"
 					name="album" value=""> <input type="submit" value="Søk i Spotify"> <span
