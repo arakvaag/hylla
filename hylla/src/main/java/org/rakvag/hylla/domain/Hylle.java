@@ -18,8 +18,8 @@ import javax.persistence.SequenceGenerator;
 public class Hylle implements DBEntitet {
 
 	@Id
-	@SequenceGenerator(name="album_id_seq", sequenceName="album_id_seq", allocationSize=10)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="album_id_seq")	
+	@SequenceGenerator(name="hylle_id_seq", sequenceName="hylle_id_seq", allocationSize=10)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="hylle_id_seq")	
 	private Long id;
 
 	@Column(unique = true, nullable = false)
