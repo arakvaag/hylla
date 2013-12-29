@@ -1,0 +1,1 @@
+java -jar hylla/target/dependency/jetty-runner.jar hylla/target/*.war
