@@ -29,7 +29,7 @@ body {
 }
 
 #filter {
-	position: fixed;
+	position: relative;
 	text-align: center;
 	vertical-align: center;
 	padding-top: 5px;
@@ -41,6 +41,6 @@ body {
 
 #albumene {
 	position: relative;
-	top: 40px;
+	margin-top: 0px;
 	padding-left: 15px;
 }
