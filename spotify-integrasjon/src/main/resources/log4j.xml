@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="org.rakvag.hylla">
+	<logger name="org.rakvag.spotifyapi">
 		<level value="info" />
 	</logger>
 	

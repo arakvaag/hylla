@@ -43,7 +43,7 @@ public class ArtistServiceImpl extends SpotifyServiceImpl implements ArtistServi
 	}
 
 	private Artist lastAlleAlbum(Artist artist) {
-		logger.debug("Starter lastAlleAlbum med artistId: " + artist.getId());
+		logger.info("Starter lastAlleAlbum med artistId: " + artist.getId());
 		SpotifyArtist spotifyArtist = spotifyAPI.hentArtistPaaSpotifyURI(artist.getSpotifyURI(), 10);
 		Set<String> urierPaaAlbumSomSkalHentes = new HashSet<String>();
 		Set<String> urierPaaAlbumSomFinnesIDB = new HashSet<String>();
@@ -71,7 +71,7 @@ public class ArtistServiceImpl extends SpotifyServiceImpl implements ArtistServi
 		Set<Album> synkedeAlbum = synkroniserAlbumInklArtistMedDBEtterSpotifyURI(albumene);
 		artist.setAlbum(synkedeAlbum);
 		artist.setErAlleAlbumLastet(lasterAlleAlbum);
-		logger.debug("Fullført lastAlleAlbum med artistId: " + artist.getId());
+		logger.info("Fullført lastAlleAlbum med artistId: " + artist.getId());
 		return artist;
 	}
 

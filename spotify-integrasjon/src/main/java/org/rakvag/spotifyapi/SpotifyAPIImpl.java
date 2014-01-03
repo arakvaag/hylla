@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,8 +23,8 @@ import org.slf4j.LoggerFactory;
 public class SpotifyAPIImpl implements SpotifyAPI {
 
 	private static final Logger logger = LoggerFactory.getLogger(SpotifyAPIImpl.class.getName());
-	private static final int MAX_ANTALL_TRAADER = 16;
-	private static final int TIMEOUT_TRAADER = 60;
+	private static final int MAX_ANTALL_TRAADER = 50;
+	private static final int TIMEOUT_TRAADER = 10;
 
 	private HTTPBufferedReader httpReader;
 
@@ -156,6 +157,7 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 			try {
 				traadTasks = executor.invokeAll(traader, TIMEOUT_TRAADER, TimeUnit.SECONDS);
 				proevIgjen = false;
+				executor.shutdown();
 			} catch (InterruptedException e) {
 				if (antallTraader > 5) {
 					proevIgjen = true;
@@ -213,6 +215,7 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 			ExecutorService executor = Executors.newFixedThreadPool(MAX_ANTALL_TRAADER);
 			try {
 				traadTasks = executor.invokeAll(oppslag, TIMEOUT_TRAADER, TimeUnit.SECONDS);
+				executor.shutdown();
 				proevIgjen = false;
 			} catch (InterruptedException e) {
 				if (antallTraader > 5) {
@@ -241,6 +244,8 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e.getMessage(), e);
 			} catch (ExecutionException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			} catch (CancellationException e) {
 				throw new RuntimeException(e.getMessage(), e);
 			}
 		}
