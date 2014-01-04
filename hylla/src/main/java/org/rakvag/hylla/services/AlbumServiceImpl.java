@@ -100,7 +100,7 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 	public Album lagreAlbum(Album album) {
 		album.setArtist(artistService.lagreArtist(album.getArtist()));
 		Artist artist = album.getArtist();
-		if (Sjanger.IKKE_SATT.equals(album.getSjanger()) 
+		if (Sjanger.IKKE_SATT.equals(artist.getDefaultSjanger()) 
 				&& !Artist.URI_VARIOUS_ARTISTS_ARTIST.equals(artist.getSpotifyURI())) {
 			artist.setDefaultSjanger(album.getSjanger());
 		}

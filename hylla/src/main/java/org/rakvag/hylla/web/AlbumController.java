@@ -5,7 +5,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.rakvag.hylla.domain.Album;
-import org.rakvag.hylla.domain.Artist;
 import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.services.AlbumService;
 import org.rakvag.hylla.services.HylleService;
@@ -77,10 +76,6 @@ public class AlbumController {
 		Album album = albumService.hentAlbum(form.getAlbumId());
 		Sjanger sjanger = Sjanger.valueOf(form.getSjanger());
 		album.setSjanger(sjanger);
-		Artist artist = album.getArtist();
-		if (artist.getDefaultSjanger() != sjanger) {
-			artist.setDefaultSjanger(sjanger);
-		}
 		album = albumService.lagreAlbum(album);
 		return new ModelAndView("redirect:/album/", "albumId", form.getAlbumId());
 	}
