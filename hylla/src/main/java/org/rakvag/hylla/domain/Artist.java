@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 @Entity
 public class Artist implements SpotifyEntitet {
 
+	public static final String URI_VARIOUS_ARTISTS_ARTIST = "spotify:artist:VA";
+
 	private final static int MAX_LENGDE_KORTNAVN = 19;
 	private final static int MAX_LENGDE_MOBILNAVN = 17;
 	

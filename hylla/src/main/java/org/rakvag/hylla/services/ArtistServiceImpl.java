@@ -31,12 +31,14 @@ public class ArtistServiceImpl extends SpotifyServiceImpl implements ArtistServi
 	public Artist hentArtist(long artistID) {
 		logger.info("Starter tjenesten hentArtist med artistID " + artistID);
 		Artist artist = artistDAO.hent(artistID);
-
-		if (!artist.isErAlleAlbumLastet())
-			artist = lastAlleAlbum(artist);
-
-		if (artist.getBildelink() == null)
-			artist.setBildelink(spotifyAPI.hentBildelink(artist.getSpotifyURI()));
+		
+		if (!Artist.URI_VARIOUS_ARTISTS_ARTIST.equals(artist.getSpotifyURI())) {
+			if (!artist.isErAlleAlbumLastet())
+				artist = lastAlleAlbum(artist);
+	
+			if (artist.getBildelink() == null)
+				artist.setBildelink(spotifyAPI.hentBildelink(artist.getSpotifyURI()));
+		}
 
 		logger.info("Fullført tjenesten hentArtist med artistID " + artistID);
 		return artistDAO.lagre(artist);

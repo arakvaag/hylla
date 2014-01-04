@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.rakvag.hylla.domain.Album;
+import org.rakvag.hylla.domain.Artist;
 import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.domain.Spor;
 import org.rakvag.spotifyapi.SpotifyAPI;
@@ -98,6 +99,12 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 	@Override
 	public Album lagreAlbum(Album album) {
 		album.setArtist(artistService.lagreArtist(album.getArtist()));
+		Artist artist = album.getArtist();
+		if (Sjanger.IKKE_SATT.equals(album.getSjanger()) 
+				&& !Artist.URI_VARIOUS_ARTISTS_ARTIST.equals(artist.getSpotifyURI())) {
+			artist.setDefaultSjanger(album.getSjanger());
+		}
+
 		return albumDAO.lagre(album);
 	}
 

@@ -8,6 +8,8 @@
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
 	<link rel="stylesheet" href="resources/main.css" type="text/css" />
 	<link rel="shortcut icon" href="resources/icon.png" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="resources/hylla.js"></script>
 </head>
 <body>
 	

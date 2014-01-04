@@ -1,6 +1,7 @@
 package org.rakvag.hylla.services;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +16,7 @@ import org.rakvag.spotifyapi.entity.SpotifyArtist;
 import org.rakvag.spotifyapi.entity.SpotifyTrack;
 
 public class Oversetter {
-
+	
 	public static Collection<Album> oversettSpotifyAlbum(Collection<SpotifyAlbum> spotifyAlbumene, Map<String, Sjanger> artistersSjanger) {
 		Collection<Album> domAlbumene = new HashSet<Album>();
 		for (SpotifyAlbum spotifyAlbum : spotifyAlbumene) {
@@ -33,10 +34,12 @@ public class Oversetter {
 		album.setAar(spotifyAlbum.getReleased());
 		album.setTilgjengeligINorge(spotifyAlbum.erTilgjengeligINorge());
 		
-		Artist artist = new Artist();
-		artist.setNavn(spotifyAlbum.getArtist());
-		artist.setSpotifyURI(spotifyAlbum.getArtistid());
-		album.setArtist(artist);
+		SpotifyArtist spotifyArtist = new SpotifyArtist();
+		spotifyArtist.setName(spotifyAlbum.getArtist());
+		spotifyArtist.setHref(spotifyAlbum.getArtistid());
+		Map<String, Sjanger> artistSjanger = new HashMap<String, Sjanger>();
+		artistSjanger.put(Artist.URI_VARIOUS_ARTISTS_ARTIST, Sjanger.IKKE_SATT);
+		album.setArtist(oversettSpotifyArtist(spotifyArtist, artistSjanger));
 
 		album.setSpotifyURI(spotifyAlbum.getHref());
 		album.setNavn(spotifyAlbum.getName());
@@ -72,7 +75,11 @@ public class Oversetter {
 	public static Artist oversettSpotifyArtist(SpotifyArtist spotifyArtist, Map<String, Sjanger> artistersSjanger) {
 		Artist artist = new Artist();
 		artist.setNavn(spotifyArtist.getName());
-		artist.setSpotifyURI(spotifyArtist.getHref());
+		if ("Various Artists".equalsIgnoreCase(spotifyArtist.getName())) {
+			artist.setSpotifyURI(Artist.URI_VARIOUS_ARTISTS_ARTIST); //Dummy-artist for Various Artists, kreves at spotifyURI settes i DB
+		} else {
+			artist.setSpotifyURI(spotifyArtist.getHref());
+		}
 		Set<Album> album = new HashSet<Album>();
 		if (spotifyArtist.getAlbums() != null) {
 			for (SearchResult albumWrapper : spotifyArtist.getAlbums()) {
