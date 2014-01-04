@@ -37,6 +37,7 @@ a:active {
 	padding: 2px;
 	border: solid #CFCFCF 1px;
 	box-shadow: 1px 3px 8px grey;
+	cursor: pointer;
 }
 
 .artistnavn {
