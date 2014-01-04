@@ -25,21 +25,8 @@
 	</div>
 	
 	<div id="artistHoyre">
-		<c:forEach var="album" items="${albumene}">
-			<div class="album">
-				<a href="aapne?spotifyURI=${album.spotifyURI}">
-					<img alt="${album.artist.navn} - ${album.navn}" title="${album.artist.navn} - ${album.navn}"
-						src="${album.coverartlink}"></a><br> 
-				<c:if test="${album.erPaaHylle}">
-					<a href="album/fjernFraHylle?albumId=${album.id}">Fjern fra hylla</a>
-				</c:if>
-				<c:if test="${album.erPaaHylle == false}">
-					<a href="album/leggTilPaaHylle?albumId=${album.id}">Legg til på hylla</a> 
-				</c:if><br>
-				<span class="artistnavn"><a	href="artist/?artistId=${album.artist.id}"> ${album.artist.kortnavn}</a></span><br>
-				<a href="album/?albumId=${album.id}">${album.kortnavn}</a><br> 
-			</div>
-		</c:forEach>
+		<jsp:include page="_hylle.jsp"></jsp:include>
 	</div>
+	
 </body>
 </html>
