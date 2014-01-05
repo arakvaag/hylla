@@ -1,13 +1,17 @@
 function spillAlbum(spotifyURI) {
+	lagreAapentAlbum(spotifyURI);
+	
 	var $iframe = $('#avspiller');
-	var baseHref = document.getElementsByTagName('base')[0].href;
     if ( $iframe.length ) {
-    	var url = baseHref + "/lagreAapentAlbum"; 
-    	$.post(url, {spotifyURI:spotifyURI});
         $iframe.attr('src', "https://embed.spotify.com/?uri=" + spotifyURI);  
-    } else { //Er ikke hjem-viewet
-    	location.href = baseHref + "/aapne?spotifyURI=" + spotifyURI;
+    } else { //Er ikke i hjem-viewet
+    	location.href = document.getElementsByTagName('base')[0].href + "/aapne?spotifyURI=" + spotifyURI;
     }
+}
+
+function lagreAapentAlbum(spotifyURI) {
+	var baseHref = document.getElementsByTagName('base')[0].href;
+	$.post(baseHref + "/lagreAapentAlbum", {spotifyURI:spotifyURI});
 }
 
 function oppdaterFiltrering(){

@@ -4,7 +4,7 @@
 		
 <c:forEach var="album" items="${albumene}">
 	<div class="album">
-		<a href="${album.spotifyURI}"><img src="${album.coverartlink}"></a><br> 
+		<a href="${album.spotifyURI}"><img src="${album.coverartlink}" onclick="lagreAapentAlbum('${album.spotifyURI}')"></a><br> 
 		<span class="artistnavn">${album.artist.mobilnavn}</span><br>
 		${album.mobilnavn}<br> 
 	</div>
