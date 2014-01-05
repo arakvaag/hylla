@@ -18,35 +18,26 @@
 	<div id="soekespilledel">
 		
 		<form id="soekform" method="GET" action="album/utfoerSoek">
-			<div class="element">
-				<table class="soeketabell">
-					<tr>
-						<td>Artist:</td>
-						<td><input id="inputSoekArtist" type="text" name="artist"
-							value=""></td>
-					</tr>
-					<tr>
-						<td>Album:</td>
-						<td><input id="inputSoekAlbum" type="text" name="album"
-							value=""></td>
-					</tr>
-				</table>
-				<input id="gjoersoek" type="submit" value="Søk i Spotify">
-			</div>
+			<label class="soekinputlabel" for="soekinputartist">Artist:</label>
+			<span class="soekinput"><input type="text" name="artist" id="soekinputartist"></span>
+			<label class="soekinputlabel" for="soekinputalbum">Album:</label>
+			<span class="soekinput"><input type="text" name="artist" id="soekinputalbum"></span>
+			<input id="gjoersoek" type="submit" value="Søk i Spotify">
 		</form>
 
 		<iframe id="avspiller" seamless src="https://embed.spotify.com/?uri=${spotifyURI}"></iframe>
 
 	</div>
 
-	<form:form id="filter">
-		<form:select id="sjanger" autofocus="autofocus" path="valgtSjanger" items="${sjangre}" onchange="oppdaterFiltrering()"/>
-		<form:select id="tidsperiode" path="valgtTidsperiode" items="${tidsperioder}" onchange="oppdaterFiltrering()"/>
-	</form:form>
+	<div id="filterdel">
+		<form:form id="filter">
+			<form:select id="sjanger" autofocus="autofocus" path="valgtSjanger" items="${sjangre}" onchange="oppdaterFiltrering()"/>
+			<form:select id="tidsperiode" path="valgtTidsperiode" items="${tidsperioder}" onchange="oppdaterFiltrering()"/>
+		</form:form>
+		<div id="myk_kant"></div>
+	</div>
 	
-	<div id="myk_kant"></div>
-
-	<div id="albumene">
+	<div id="albumdel">
 		<jsp:include page="_hylle.jsp"></jsp:include>
 	</div>
 
