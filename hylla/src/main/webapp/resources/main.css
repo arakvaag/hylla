@@ -26,7 +26,7 @@ a:active {
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 70%;
 	padding-top: 0px;
-	padding-right: 30px;
+	padding-right: 20px;
 	padding-bottom: 10px;
 	padding-left: 0px;
 }
@@ -38,6 +38,14 @@ a:active {
 	border: solid #CFCFCF 1px;
 	box-shadow: 1px 3px 8px grey;
 	cursor: pointer;
+}
+
+#artistAlbumNavnLang {
+	display: inherit;
+}
+
+#artistAlbumNavnMobil {
+	display: none;
 }
 
 .artistnavn {
@@ -75,6 +83,75 @@ ul {
 	position: fixed;
 	top: 0;
 	left: 0;
+}
+
+@media (min-width: 1024px) {
+	#filterdel {
+		left: 300px;
+	}
+
+	#filter {
+		padding-bottom: 3px;
+	}
+
+	#albumdel {
+		margin-top: 42px;
+		margin-left: 300px;
+	}
+}
+
+@media (max-width: 1024px) {
+	#soekespilledel {
+		display: none;
+	}
+	
+	#filterdel {
+		left: 0px;
+		text-align: center;
+		vertical-align: center;
+	}
+	
+	#filter {
+		padding-bottom: 3px;
+	}
+
+	#albumdel {
+		margin-top: 42px;
+		margin-left: 8px;
+		width: 100%;
+	}
+
+	#leggTilFjernLink {
+		display:none;
+	}
+}
+
+@media (max-width: 360px) {
+	#filter {
+		padding-bottom: 10px;
+	}
+	
+	#albumdel {
+		margin-top: 49px;
+	}
+
+	.album {
+		padding-right: 15px;
+	}
+
+	.album img {
+		width: 92px;
+		height: 92px;
+		padding: 2px;
+	}	
+	
+	#artistAlbumNavnLang {
+		display: none;
+	}
+	
+	#artistAlbumNavnMobil {
+		display: inherit;
+	}
 }
 
 #soekform {
@@ -117,7 +194,6 @@ ul {
 #filterdel {
 	position: fixed;
 	top: 0px;
-	left: 300px;
 	width: 100%;
 	z-index: 1;
 }
@@ -126,7 +202,6 @@ ul {
 	height: 25px;
 	padding-top: 10px;
 	padding-left: 5px;
-	padding-bottom: 3px;
 	background-color: white;
 }
 
@@ -141,8 +216,6 @@ ul {
 
 #albumdel {
 	position: relative;
-	margin-top: 42px;
-	margin-left: 300px;
 	max-width: 1050px;
 	padding-left: 5px;
 }

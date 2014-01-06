@@ -56,12 +56,7 @@ public class HjemController {
 		filterForm.setValgtTidsperiode(hylle.getValgtTidsperiode() != null ? hylle.getValgtTidsperiode().name()
 				: KODE_ALLE_TIDSPERIODER);
 
-		ModelAndView mv = null;
-		if (userAgent.contains("Android"))
-			mv = new ModelAndView("mobilhjem");
-		else 
-			mv = new ModelAndView("hjem");
-		
+		ModelAndView mv = new ModelAndView("hjem");
 		mv.addObject("albumene", lagAlbumlisteForView(hylle));
 		mv.addObject("visAarOgLengdePaaAlbum", false);
 		mv.addObject("command", filterForm);
