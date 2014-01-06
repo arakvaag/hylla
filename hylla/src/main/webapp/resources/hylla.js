@@ -1,11 +1,12 @@
 function spillAlbum(spotifyURI) {
 	lagreAapentAlbum(spotifyURI);
 	
-	var $iframe = $('#avspiller');
-    if ( $iframe.length ) {
-        $iframe.attr('src', "https://embed.spotify.com/?uri=" + spotifyURI);  
-    } else { //Er ikke i hjem-viewet
-    	location.href = document.getElementsByTagName('base')[0].href + "/aapne?spotifyURI=" + spotifyURI;
+	var iframe = $('#avspiller');
+    if ( iframe.length && iframe.is(":visible")) {
+        iframe.attr('src', "https://embed.spotify.com/?uri=" + spotifyURI);  
+    } else {
+    	win = window.open(spotifyURI);
+        win.close();
     }
 }
 
