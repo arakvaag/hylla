@@ -78,11 +78,7 @@ public class HjemController {
 		filterForm.setValgtTidsperiode(tidsperiode);
 		hylle = oppdaterHylle(hylle, filterForm.getValgtSjanger(), filterForm.getValgtTidsperiode(), null);
 		
-		ModelAndView mv = null;
-		if (userAgent.contains("Android"))
-			mv = new ModelAndView("_mobilhylle");
-		else 
-			mv = new ModelAndView("_hylle");
+		ModelAndView mv = new ModelAndView("_hylle");
 		mv.addObject("albumene", lagAlbumlisteForView(hylle));
 		return mv;
 	}
