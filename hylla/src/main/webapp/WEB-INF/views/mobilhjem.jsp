@@ -21,7 +21,7 @@
 			<form:select id="tidsperiode" path="valgtTidsperiode" items="${tidsperioder}" onchange="oppdaterFiltrering()"/>
 		</form:form>
 		
-		<div id="albumene">
+		<div id="albumdel">
 			<jsp:include page="_mobilhylle.jsp"></jsp:include>
 		</div>
 
