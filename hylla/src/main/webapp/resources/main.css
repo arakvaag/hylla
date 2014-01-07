@@ -126,7 +126,7 @@ ul {
 	}
 }
 
-@media (max-width: 360px) {
+@media (max-width: 598px) {
 	#filter {
 		padding-bottom: 10px;
 	}
