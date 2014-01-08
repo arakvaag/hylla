@@ -77,18 +77,21 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 		if (streng == null)
 			return null;
 
-		streng = streng.replace(" ", "+");
-		streng = streng.replace("æ", "ae");
-		streng = streng.replace("ø", "o");
-		streng = streng.replace("å", "a");
-		streng = streng.replace("ä", "a");
-		streng = streng.replace("ö", "o");
-		streng = streng.replace("Æ", "AE");
-		streng = streng.replace("Ø", "O");
-		streng = streng.replace("Å", "A");
-		streng = streng.replace("Ä", "A");
-		streng = streng.replace("Ö", "O");
-		return streng;
+		String nyStreng = streng.replace(" ", "+");
+		nyStreng = nyStreng.replace("æ", "ae");
+		nyStreng = nyStreng.replace("ø", "o");
+		nyStreng = nyStreng.replace("å", "a");
+		nyStreng = nyStreng.replace("ä", "a");
+		nyStreng = nyStreng.replace("ö", "o");
+		nyStreng = nyStreng.replace("Æ", "AE");
+		nyStreng = nyStreng.replace("Ø", "O");
+		nyStreng = nyStreng.replace("Å", "A");
+		nyStreng = nyStreng.replace("Ä", "A");
+		nyStreng = nyStreng.replace("Ö", "O");
+		
+		logger.debug("Opprinnelig streng: " + streng + " , oppdatert streng: " + nyStreng);
+		
+		return nyStreng;
 	}
 
 	private String trimTilNull(String streng) {
