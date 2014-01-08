@@ -22,7 +22,7 @@
 			<label class="soekinputlabel" for="soekinputartist">Artist:</label>
 			<span class="soekinput"><input type="text" name="artist" id="soekinputartist"></span>
 			<label class="soekinputlabel" for="soekinputalbum">Album:</label>
-			<span class="soekinput"><input type="text" name="artist" id="soekinputalbum"></span>
+			<span class="soekinput"><input type="text" name="album" id="soekinputalbum"></span>
 			<input id="gjoersoek" type="submit" value="Søk i Spotify">
 		</form>
 
