@@ -36,13 +36,14 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 		if (artist == null && album == null)
 			return new ArrayList<SpotifyAlbum>();
 
-		artist = haandterSpesialtegn(artist);
-		album = haandterSpesialtegn(album);
+		//artist = haandterSpesialtegn(artist);
+		//album = haandterSpesialtegn(album);
 		StringBuilder soekestreng = new StringBuilder(artist == null ? "" : "artist:" + artist);
 		if (artist != null && album != null)
 			soekestreng.append("+");
 		soekestreng.append(album == null ? "" : "album:" + album);
-
+		logger.debug("Søkestreng: " + soekestreng);
+		
 		logger.info("Kaller Spotify");
 		boolean proevEnGangTil = false;
 		int antallForsoek = 0;

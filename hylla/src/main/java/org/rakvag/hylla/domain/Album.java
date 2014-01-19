@@ -87,7 +87,7 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 					return 1;
 				if (o1.getDisknummer() < o2.getDisknummer())
 					return -1;
-				if (o1.getDisknummer() == o2.getDisknummer()) {
+				if (o1.getDisknummer().equals(o2.getDisknummer())) {
 					if (o1.getSpornummer() > o2.getSpornummer())
 						return 1;
 					if (o1.getSpornummer() < o2.getSpornummer())
@@ -138,6 +138,27 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 		
 		return Float.compare(this.popularitet, other.getPopularitet()) * -1;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((aar == null) ? 0 : aar.hashCode());
+		result = prime * result + ((artist == null) ? 0 : artist.hashCode());
+		result = prime * result + ((coverartlink == null) ? 0 : coverartlink.hashCode());
+		result = prime * result + (erPaaHylle ? 1231 : 1237);
+		result = prime * result + ((hyller == null) ? 0 : hyller.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((lengde == null) ? 0 : lengde.hashCode());
+		result = prime * result + ((navn == null) ? 0 : navn.hashCode());
+		result = prime * result + Float.floatToIntBits(popularitet);
+		result = prime * result + ((sjanger == null) ? 0 : sjanger.hashCode());
+		result = prime * result + ((spor == null) ? 0 : spor.hashCode());
+		result = prime * result + ((spotifyURI == null) ? 0 : spotifyURI.hashCode());
+		result = prime * result + (tilgjengeligINorge ? 1231 : 1237);
+		return result;
+	}
+
 
 	@Override
 	public boolean equals(Object other) {
