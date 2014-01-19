@@ -22,6 +22,7 @@ public class HTTPBufferedReader {
 	private BufferedReader bufferedReader;
 
 	public void aapne(String url) {
+		logger.debug("URL: " + url);
 		try {
 			bufferedReader = new BufferedReader(new InputStreamReader((new URL(url)).openStream()));
 		} catch (MalformedURLException e) {
