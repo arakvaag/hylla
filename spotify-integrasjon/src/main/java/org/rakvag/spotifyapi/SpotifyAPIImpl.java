@@ -36,8 +36,8 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 		if (artist == null && album == null)
 			return new ArrayList<SpotifyAlbum>();
 
-		//artist = haandterSpesialtegn(artist);
-		//album = haandterSpesialtegn(album);
+		artist = haandterSpesialtegnIUrl(artist);
+		album = haandterSpesialtegnIUrl(album);
 		StringBuilder soekestreng = new StringBuilder(artist == null ? "" : "artist:" + artist);
 		if (artist != null && album != null)
 			soekestreng.append("+");
@@ -74,13 +74,13 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 			return new ArrayList<SpotifyAlbum>();
 	}
 
-	private String haandterSpesialtegn(String streng) {
+	private String haandterSpesialtegnIUrl(String streng) {
 		if (streng == null)
 			return null;
 
 		String nyStreng = streng.replace(" ", "+");
 		nyStreng = nyStreng.replace("æ", "ae");
-		nyStreng = nyStreng.replace("ø", "o");
+		nyStreng = nyStreng.replace("ø", "\u00F8");
 		nyStreng = nyStreng.replace("å", "a");
 		nyStreng = nyStreng.replace("ä", "a");
 		nyStreng = nyStreng.replace("ö", "o");
