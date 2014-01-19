@@ -86,15 +86,16 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 			logger.debug(String.format("%02X ", b));	
 		}
 		
-		
 		if (nyStreng.contains("ø"))
 			logger.debug("Fant karakter ø (ikke eskapet)");
 		else 
 			logger.debug("Fant ikke karakter ø (ikke eskapet)");
+		
 		if (nyStreng.contains("\u00F8"))
 			logger.debug("Fant karakter \u00F8 (eskapet)");
 		else 
 			logger.debug("Fant ikke karakter \u00F8 (eskapet)");
+		
 		nyStreng = nyStreng.replace("ø", "\u00F8");
 		
 		nyStreng = nyStreng.replace("å", "a");

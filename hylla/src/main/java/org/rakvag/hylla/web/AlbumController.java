@@ -8,6 +8,9 @@ import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.services.AlbumService;
 import org.rakvag.hylla.services.HylleService;
+import org.rakvag.spotifyapi.SpotifyAPIImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,6 +23,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Scope("request")
 public class AlbumController {
 
+	private static final Logger logger = LoggerFactory.getLogger(AlbumController.class.getName());
+
 	@Inject
 	private AlbumService albumService;
 	@Inject
@@ -31,6 +36,10 @@ public class AlbumController {
 	public ModelAndView utfoerSoek(@ModelAttribute("artist") String artistnavn,
 			@ModelAttribute("album") String albumnavn, @ModelAttribute("taMedKorteAlbum") String taMedKorteAlbum,
 			RedirectAttributes redirAttr) {
+		
+		for (byte b : artistnavn.getBytes()) {
+			logger.debug(String.format("%02X ", b));	
+		}
 		
 		List<Album> albumliste = albumService.soekEtterAlbumISpotify(artistnavn, albumnavn,
 				"true".equals(taMedKorteAlbum));
