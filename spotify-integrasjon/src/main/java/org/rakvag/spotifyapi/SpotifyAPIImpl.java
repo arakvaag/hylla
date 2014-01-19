@@ -81,6 +81,12 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 		String nyStreng = streng.replace(" ", "+");
 		nyStreng = nyStreng.replace("æ", "ae");
 		
+		
+		for (byte b : nyStreng.getBytes()) {
+			logger.debug(String.format("%02X ", b));	
+		}
+		
+		
 		if (nyStreng.contains("ø"))
 			logger.debug("Fant karakter ø (ikke eskapet)");
 		else 
