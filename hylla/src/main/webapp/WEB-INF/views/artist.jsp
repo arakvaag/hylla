@@ -11,6 +11,8 @@
 	<link rel="shortcut icon" href="resources/icon.png" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="resources/hylla.js"></script>
+	<meta name="viewport" content="width=100%; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+	<meta charset="UTF-8">
 </head>
 <body>
 	<div class="toppMeny">

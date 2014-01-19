@@ -13,12 +13,13 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="resources/hylla.js"></script>
 	<meta name="viewport" content="width=100%; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+	<meta charset="UTF-8">
 </head>
 <body>
 
 	<div id="soekespilledel">
 		
-		<form id="soekform" method="GET" action="album/utfoerSoek">
+		<form id="soekform" method="GET" action="album/utfoerSoek" accept-charset="UTF-8">
 			<label class="soekinputlabel" for="soekinputartist">Artist:</label>
 			<span class="soekinput"><input type="text" name="artist" id="soekinputartist"></span>
 			<label class="soekinputlabel" for="soekinputalbum">Album:</label>

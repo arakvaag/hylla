@@ -10,6 +10,8 @@
 	<link rel="shortcut icon" href="resources/icon.png" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="resources/hylla.js"></script>
+	<meta name="viewport" content="width=100%; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+	<meta charset="UTF-8">
 </head>
 <body>
 	
@@ -18,7 +20,7 @@
 	</div>
 
 	<div id="soekmeny">
-		<form method="GET" action="album/utfoerSoek">
+		<form method="GET" action="album/utfoerSoek" accept-charset="UTF-8">
 			<div class="element">
 				<input type="text" name="artist" value="" autofocus="autofocus"> <input type="text"
 					name="album" value=""> <input type="submit" value="Søk i Spotify"> <span

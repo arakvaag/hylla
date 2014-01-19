@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,12 @@ public class HTTPBufferedReader {
 	private BufferedReader bufferedReader;
 
 	public void aapne(String url) {
-		logger.debug("URL: " + url);
 		try {
-			bufferedReader = new BufferedReader(new InputStreamReader((new URL(url)).openStream()));
+			logger.debug("URL: " + url);
+			URL url2 = new URL(url);
+			Charset cs = Charset.forName("UTF-8");
+			InputStreamReader inputStreamReader = new InputStreamReader(url2.openStream(), cs);
+			bufferedReader = new BufferedReader(inputStreamReader);
 		} catch (MalformedURLException e) {
 			logger.error("Ugyldig URL oppgitt");
 			logger.error(e.getMessage());

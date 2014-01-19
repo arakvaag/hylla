@@ -36,8 +36,8 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 		if (artist == null && album == null)
 			return new ArrayList<SpotifyAlbum>();
 
-		artist = haandterSpesialtegnIUrl(artist);
-		album = haandterSpesialtegnIUrl(album);
+		artist = haandterSpesialtegn(artist);
+		album = haandterSpesialtegn(album);
 		StringBuilder soekestreng = new StringBuilder(artist == null ? "" : "artist:" + artist);
 		if (artist != null && album != null)
 			soekestreng.append("+");
@@ -57,6 +57,7 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 					soekerespons.append(line);
 				}
 				httpReader.lukkKobling();
+				logger.debug("Søkerespons: " + soekerespons.toString());
 				proevEnGangTil = false;
 			} catch (BadGatewayException bge) {
 				if (antallForsoek >= maxForsek)
@@ -74,29 +75,13 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 			return new ArrayList<SpotifyAlbum>();
 	}
 
-	private String haandterSpesialtegnIUrl(String streng) {
+	private String haandterSpesialtegn(String streng) {
 		if (streng == null)
 			return null;
 
 		String nyStreng = streng.replace(" ", "+");
 		nyStreng = nyStreng.replace("æ", "ae");
-		
-		
-		for (byte b : nyStreng.getBytes()) {
-			logger.debug(String.format("%02X ", b));	
-		}
-		
-		
-		if (nyStreng.contains("ø"))
-			logger.debug("Fant karakter ø (ikke eskapet)");
-		else 
-			logger.debug("Fant ikke karakter ø (ikke eskapet)");
-		if (nyStreng.contains("\u00F8"))
-			logger.debug("Fant karakter \u00F8 (eskapet)");
-		else 
-			logger.debug("Fant ikke karakter \u00F8 (eskapet)");
-		nyStreng = nyStreng.replace("ø", "\u00F8");
-		
+		nyStreng = nyStreng.replace("ø", "o");
 		nyStreng = nyStreng.replace("å", "a");
 		nyStreng = nyStreng.replace("ä", "a");
 		nyStreng = nyStreng.replace("ö", "o");

@@ -9,6 +9,8 @@
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
 	<link rel="stylesheet" href="resources/main.css" type="text/css" />
 	<link rel="shortcut icon" href="resources/icon.png" />
+	<meta name="viewport" content="width=100%; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+	<meta charset="UTF-8">
 </head>
 <body>
 	
@@ -28,7 +30,7 @@
 		</div>
 		<div class="albumNedreVenstreTabell">
 			<div id="sjanger">
-				<form:form id="albumForm" method="POST" action="album/lagre">
+				<form:form id="albumForm" method="POST" action="album/lagre" accept-charset="UTF-8">
 					<form:select path="sjanger" items="${sjangre}"
 						onchange="document.getElementById('albumForm').submit()"
 						autofocus="true" />
