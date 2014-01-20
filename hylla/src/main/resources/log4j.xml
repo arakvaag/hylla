@@ -12,12 +12,12 @@
 	
 	<!-- Application Loggers -->
 	<logger name="org.rakvag.hylla">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 	
 	<!-- Application Loggers -->
 	<logger name="org.rakvag.spotifyapi">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 
 	<!-- 3rdparty Loggers -->
