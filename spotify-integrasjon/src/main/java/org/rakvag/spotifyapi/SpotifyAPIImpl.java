@@ -36,8 +36,6 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 		if (artist == null && album == null)
 			return new ArrayList<SpotifyAlbum>();
 
-		artist = haandterSpesialtegn(artist);
-		album = haandterSpesialtegn(album);
 		StringBuilder soekestreng = new StringBuilder(artist == null ? "" : "artist:" + artist);
 		if (artist != null && album != null)
 			soekestreng.append("+");
@@ -73,27 +71,6 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 			return soekeResultat.getAlbums();
 		} else
 			return new ArrayList<SpotifyAlbum>();
-	}
-
-	private String haandterSpesialtegn(String streng) {
-		if (streng == null)
-			return null;
-
-		String nyStreng = streng.replace(" ", "+");
-		nyStreng = nyStreng.replace("æ", "ae");
-		//nyStreng = nyStreng.replace("ø", "o");
-		nyStreng = nyStreng.replace("å", "a");
-		nyStreng = nyStreng.replace("ä", "a");
-		nyStreng = nyStreng.replace("ö", "o");
-		nyStreng = nyStreng.replace("Æ", "AE");
-		nyStreng = nyStreng.replace("Ø", "O");
-		nyStreng = nyStreng.replace("Å", "A");
-		nyStreng = nyStreng.replace("Ä", "A");
-		nyStreng = nyStreng.replace("Ö", "O");
-		
-		logger.debug("Opprinnelig streng: " + streng + " , oppdatert streng: " + nyStreng);
-		
-		return nyStreng;
 	}
 
 	private String trimTilNull(String streng) {
