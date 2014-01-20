@@ -81,7 +81,7 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 
 		String nyStreng = streng.replace(" ", "+");
 		nyStreng = nyStreng.replace("æ", "ae");
-		nyStreng = nyStreng.replace("ø", "o");
+		//nyStreng = nyStreng.replace("ø", "o");
 		nyStreng = nyStreng.replace("å", "a");
 		nyStreng = nyStreng.replace("ä", "a");
 		nyStreng = nyStreng.replace("ö", "o");
