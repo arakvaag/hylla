@@ -91,6 +91,7 @@ ul {
 
 	#filter {
 		padding-bottom: 3px;
+		padding-left: 10px;
 	}
 
 	#albumdel {
@@ -200,7 +201,6 @@ ul {
 #filter {
 	height: 25px;
 	padding-top: 10px;
-	padding-left: 10px;
 	background-color: white;
 }
 
