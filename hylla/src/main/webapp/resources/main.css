@@ -26,15 +26,14 @@ a:active {
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 70%;
 	padding-top: 0px;
-	padding-right: 20px;
+	padding-right: 10px;
 	padding-bottom: 10px;
-	padding-left: 0px;
+	padding-left: 10px;
 }
 
 .album img {
 	width: 110px;
 	height: 110px;
-	padding: 2px;
 	border: solid #CFCFCF 1px;
 	box-shadow: 1px 3px 8px grey;
 	cursor: pointer;
@@ -85,9 +84,9 @@ ul {
 	left: 0;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
 	#filterdel {
-		left: 300px;
+		left: 290px;
 	}
 
 	#filter {
@@ -95,8 +94,8 @@ ul {
 	}
 
 	#albumdel {
-		margin-top: 42px;
-		margin-left: 300px;
+		margin-top: 47px;
+		margin-left: 290px;
 	}
 }
 
@@ -106,9 +105,7 @@ ul {
 	}
 	
 	#filterdel {
-		left: 0px;
 		text-align: center;
-		vertical-align: center;
 	}
 	
 	#filter {
@@ -116,8 +113,8 @@ ul {
 	}
 
 	#albumdel {
-		margin-top: 42px;
-		margin-left: 8px;
+		margin-top: 47px;
+		margin-left: 0px;
 		width: 100%;
 	}
 
@@ -132,17 +129,19 @@ ul {
 	}
 	
 	#albumdel {
-		margin-top: 49px;
+		margin-top: 53px;
+		margin-left: 0px;
+		width: 100%;
 	}
 
 	.album {
-		padding-right: 15px;
+		padding-right: 10px;
 	}
 
 	.album img {
-		width: 92px;
-		height: 92px;
-		padding: 2px;
+		width: 96px;
+		height: 96px;
+		padding: 0px;
 	}	
 	
 	#artistAlbumNavnLang {
@@ -201,7 +200,7 @@ ul {
 #filter {
 	height: 25px;
 	padding-top: 10px;
-	padding-left: 5px;
+	padding-left: 10px;
 	background-color: white;
 }
 
@@ -217,7 +216,6 @@ ul {
 #albumdel {
 	position: relative;
 	max-width: 1050px;
-	padding-left: 5px;
 }
 
 /* SLUTT: HJEM.JSP */
