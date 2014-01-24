@@ -118,10 +118,24 @@ ul {
 		margin-left: 0px;
 		width: 100%;
 	}
+	
+	.album img {
+		width: 105px;
+		height: 105px;
+	}	
 
 	#leggTilFjernLink {
 		display:none;
 	}
+	
+	#artistAlbumNavnLang {
+		display: none;
+	}
+	
+	#artistAlbumNavnMobil {
+		display: inherit;
+	}
+	
 }
 
 @media (max-width: 598px) {
@@ -142,7 +156,6 @@ ul {
 	.album img {
 		width: 96px;
 		height: 96px;
-		padding: 0px;
 	}	
 	
 	#artistAlbumNavnLang {
@@ -215,7 +228,7 @@ ul {
 
 #albumdel {
 	position: relative;
-	max-width: 1050px;
+	max-width: 1060px;
 }
 
 /* SLUTT: HJEM.JSP */
