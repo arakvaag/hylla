@@ -1,9 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>		
+
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Hylla - søk album</title>
+	<title>Hylla - sÃ¸k album</title>
     <c:set var="url">${pageContext.request.requestURL}</c:set>
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
 	<link rel="stylesheet" href="resources/main.css" type="text/css" />
@@ -23,9 +25,9 @@
 		<form method="GET" action="album/utfoerSoek" accept-charset="UTF-8">
 			<div class="element">
 				<input type="text" name="artist" value="" autofocus="autofocus"> <input type="text"
-					name="album" value=""> <input type="submit" value="Søk i Spotify"> <span
-					class="spacer10">&nbsp;</span> <input type="checkbox" name="taMedKorteAlbum" value="true">Ta
-				med korte album?<br>
+					name="album" value=""> <input type="submit" value="SÃ¸k i Spotify"> <span
+					class="spacer10">&nbsp;</span> <input type="checkbox" name="taMedKorteAlbum" 
+						value="true">Ta med korte album?<br>
 			</div>
 		</form>
 	</div>

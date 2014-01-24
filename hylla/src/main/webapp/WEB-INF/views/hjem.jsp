@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +26,7 @@
 			<span class="soekinput"><input type="text" name="artist" id="soekinputartist"></span>
 			<label class="soekinputlabel" for="soekinputalbum">Album:</label>
 			<span class="soekinput"><input type="text" name="album" id="soekinputalbum"></span>
-			<input id="gjoersoek" type="submit" value="Søk i Spotify">
+			<input id="gjoersoek" type="submit" value="SÃ¸k i Spotify">
 		</form>
 
 		<iframe id="avspiller" seamless src="https://embed.spotify.com/?uri=${spotifyURI}"></iframe>

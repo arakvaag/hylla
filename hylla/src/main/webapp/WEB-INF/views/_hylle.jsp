@@ -1,7 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-		
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8"%>		
+
 <c:forEach var="album" items="${albumene}">
 	<div class="album">
 		<img alt="${album.artist.navn} - ${album.navn}" title="${album.artist.navn} - ${album.navn}"
@@ -12,7 +13,7 @@
 				<a href="album/fjernFraHylle?albumId=${album.id}">Fjern fra hylla</a>
 			</c:if>
 			<c:if test="${album.erPaaHylle == false}">
-				<a href="album/leggTilPaaHylle?albumId=${album.id}">Legg til på hylla</a> 
+				<a href="album/leggTilPaaHylle?albumId=${album.id}">Legg til pÃ¥ hylla</a> 
 			</c:if><br>
 		</div>
 
