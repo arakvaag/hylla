@@ -28,5 +28,6 @@
 		</div>
 
 		<c:if test="${visAarOgLengdePaaAlbum}">${album.aar} - ${album.lengdeFormatert}</c:if>
+
 	</div>
 </c:forEach>
