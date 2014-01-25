@@ -35,8 +35,7 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 
 		List<SpotifyAlbum> resultat = api.soekEtterAlbum("radka toneff", "some time ago", 1);
 
-		verify(httpReader).aapne(
-				"http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff+album:some+time+ago");
+		verify(httpReader).aapne("http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff+album:some+time+ago");
 		assertEquals(1, resultat.size());
 		SpotifyAlbum album = resultat.iterator().next();
 		assertNull(album.getArtist());
@@ -53,8 +52,7 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 	}
 
 	@Test
-	public void test_BaadeArtistOgAlbumOppgitt_ToSoeketreff_ToAlbumSkalReturneres()
-	{
+	public void test_BaadeArtistOgAlbumOppgitt_ToSoeketreff_ToAlbumSkalReturneres() {
 		when(httpReader.lesLinje())
 				.thenReturn(
 						"{\"info\": {\"num_results\": 2, \"limit\": 100, \"offset\": 0, \"query\": \"artist:radka toneff\", \"type\": \"album\", \"page\": 1}, \"albums\": [{\"name\": \"Butterfly\", \"popularity\": \"0.40724\", \"external-ids\": [{\"type\": \"upc\", \"id\": \"7042880081086\"}], \"href\": \"spotify:album:5sNUqq4t59InV57ZVgwSsx\", \"artists\": [{\"href\": \"spotify:artist:4zUpW8OD0YnE6hRmdVv1Go\", \"name\": \"Radka Toneff\"}], \"availability\": {\"territories\": \"AD AE ZZ\"}}, {\"name\": \"Some Time Ago (A Collection Of Her Finest Moments)\", \"popularity\": \"0.36620\", \"external-ids\": [{\"type\": \"upc\", \"id\": \"00044006665023\"}], \"href\": \"spotify:album:2EHAqPVIc3KQ5PNMflpeO6\", \"artists\": [{\"href\": \"spotify:artist:4zUpW8OD0YnE6hRmdVv1Go\", \"name\": \"Radka Toneff\"}], \"availability\": {\"territories\": \"AD AT UA ZA\"}}]}")
@@ -62,8 +60,7 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 
 		List<SpotifyAlbum> resultat = api.soekEtterAlbum("radka toneff", "some time ago", 1);
 
-		verify(httpReader).aapne(
-				"http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff+album:some+time+ago");
+		verify(httpReader).aapne("http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff+album:some+time+ago");
 		assertEquals(2, resultat.size());
 		Iterator<SpotifyAlbum> iter = resultat.iterator();
 		SpotifyAlbum album = iter.next();
@@ -81,8 +78,7 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 
 		api.soekEtterAlbum(null, "prima norsk", 1);
 
-		verify(httpReader).aapne(
-				"http://ws.spotify.com/search/1/album.json?q=album:prima+norsk");
+		verify(httpReader).aapne("http://ws.spotify.com/search/1/album.json?q=album:prima+norsk");
 	}
 
 	@Test
@@ -94,8 +90,7 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 
 		api.soekEtterAlbum("radka toneff", null, 1);
 
-		verify(httpReader).aapne(
-				"http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff");
+		verify(httpReader).aapne("http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff");
 	}
 
 	@Test
@@ -108,16 +103,16 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 	}
 
 	@Test
-	public void test_SoekestrengerHarSpesialTegn_AlleSpesialtegnSkalKonverteres_AlleSpesialtegnTestes() {
+	public void test_BaadeAlbumOgArtistHarSpaceISeg_SpaceSkalErstattesMedPlussISoekeURL() {
+		
 		when(httpReader.lesLinje())
 				.thenReturn(
-						"{\"info\": {\"num_results\": 1, \"limit\": 100, \"offset\": 0, \"query\": \"artist:radka toneff\", \"type\": \"album\", \"page\": 1}, \"albums\": [{\"name\": \"Butterfly\", \"popularity\": \"0.40724\", \"external-ids\": [{\"type\": \"upc\", \"id\": \"7042880081086\"}], \"href\": \"spotify:album:5sNUqq4t59InV57ZVgwSsx\", \"artists\": [{\"href\": \"spotify:artist:4zUpW8OD0YnE6hRmdVv1Go\", \"name\": \"Radka Toneff\"}], \"availability\": {\"territories\": \"IE IL IN\"}}]}")
+						"{\"info\": {\"num_results\": 1, \"limit\": 100, \"offset\": 0, \"query\": \"artist:radka+toneff\", \"type\": \"album\", \"page\": 1}, \"albums\": [{\"name\": \"Butterfly\", \"popularity\": \"0.40724\", \"external-ids\": [{\"type\": \"upc\", \"id\": \"7042880081086\"}], \"href\": \"spotify:album:5sNUqq4t59InV57ZVgwSsx\", \"artists\": [{\"href\": \"spotify:artist:4zUpW8OD0YnE6hRmdVv1Go\", \"name\": \"Radka Toneff\"}], \"availability\": {\"territories\": \"IE IL IN\"}}]}")
 				.thenReturn(null);
 
-		api.soekEtterAlbum("æ ø å ä ö Æ Ø Å Ä Ö", "æ ø å ä ö Æ Ø Å Ä Ö", 1);
+		api.soekEtterAlbum("radka toneff", "no album", 1);
 
-		verify(httpReader).aapne(
-				"http://ws.spotify.com/search/1/album.json?q=artist:ae+o+a+a+o+AE+O+A+A+O+album:ae+o+a+a+o+AE+O+A+A+O");
+		verify(httpReader).aapne("http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff+album:no+album");
 	}
 
 	@Test
@@ -129,8 +124,7 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 
 		api.soekEtterAlbum("radka toneff", "  ", 1);
 
-		verify(httpReader).aapne(
-				"http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff");
+		verify(httpReader).aapne("http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff");
 	}
 
 	@Test
@@ -142,8 +136,7 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 
 		api.soekEtterAlbum("  ", "prima norsk", 1);
 
-		verify(httpReader).aapne(
-				"http://ws.spotify.com/search/1/album.json?q=album:prima+norsk");
+		verify(httpReader).aapne("http://ws.spotify.com/search/1/album.json?q=album:prima+norsk");
 	}
 
 	@Test
@@ -155,8 +148,7 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 
 		api.soekEtterAlbum(" radka toneff ", " some time ago ", 1);
 
-		verify(httpReader).aapne(
-				"http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff+album:some+time+ago");
+		verify(httpReader).aapne("http://ws.spotify.com/search/1/album.json?q=artist:radka+toneff+album:some+time+ago");
 	}
 
 	@Test
@@ -175,8 +167,7 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 	}
 
 	@Test
-	public void test_BadGatewayErrorFraServerVedFoersteKall_SkalProeveIgjen()
-	{
+	public void test_BadGatewayErrorFraServerVedFoersteKall_SkalProeveIgjen() {
 		doThrow(new BadGatewayException("test")).doNothing().when(httpReader).aapne(anyString());
 		when(httpReader.lesLinje())
 				.thenReturn(
@@ -190,16 +181,14 @@ public class SpotifyAPIImpl_SoekEtterAlbum_Test {
 	}
 
 	@Test(expected = BadGatewayException.class)
-	public void test_BadGatewayErrorFraServerVedFoersteKall_KunEttForsoekTillatt_SkalKasteBadGatewayException()
-	{
+	public void test_BadGatewayErrorFraServerVedFoersteKall_KunEttForsoekTillatt_SkalKasteBadGatewayException() {
 		doThrow(new BadGatewayException("test")).when(httpReader).aapne(anyString());
 
 		api.soekEtterAlbum("radka toneff", "some time ago", 1);
 	}
 
 	@Test
-	public void test_IngenTreffPaaSoek_SkalReturnereTomList()
-	{
+	public void test_IngenTreffPaaSoek_SkalReturnereTomList() {
 		when(httpReader.lesLinje())
 				.thenReturn(
 						"{\"info\": {\"num_results\": 0, \"limit\": 100, \"offset\": 0, \"query\": \"artist:radka tonedeaf\", \"type\": \"album\", \"page\": 1}, \"albums\": []}")

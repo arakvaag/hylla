@@ -49,7 +49,9 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 		do {
 			try {
 				antallForsoek++;
-				httpReader.aapne("http://ws.spotify.com/search/1/album.json?q=" + soekestreng.toString());
+				String url = "http://ws.spotify.com/search/1/album.json?q=" + soekestreng.toString();
+				url = url.replace(" ", "+");
+				httpReader.aapne(url);
 				String line = null;
 				while ((line = httpReader.lesLinje()) != null) {
 					soekerespons.append(line);
