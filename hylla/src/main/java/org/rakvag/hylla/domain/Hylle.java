@@ -14,6 +14,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @Entity
 public class Hylle implements DBEntitet {
 
@@ -38,6 +41,7 @@ public class Hylle implements DBEntitet {
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "HylleAlbum")
+	@Fetch(FetchMode.SUBSELECT)
 	private Set<Album> albumene;
 
 	public Long getId() {
