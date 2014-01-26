@@ -1,6 +1,5 @@
 package org.rakvag.hylla.web;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -121,24 +120,9 @@ public class HjemController {
 	}
 
 	private List<Album> lagAlbumlisteForView(Hylle hylle) {
-		List<Album> behandletListe = new ArrayList<Album>();
-		Sjanger valgtSjanger = hylle.getValgtSjanger();
-		Tidsperiode valgtTidsperiode = hylle.getValgtTidsperiode();
-
-		for (Album album : hylle.getAlbumene()) {
-			boolean skalMed = true;
-
-			if (valgtSjanger != null && valgtSjanger != album.getSjanger())
-				skalMed = false;
-
-			if (valgtTidsperiode != null && valgtTidsperiode != Tidsperiode.hentTidsperiode(album.getAar()))
-				skalMed = false;
-
-			if (skalMed)
-				behandletListe.add(album);
-		}
-
-		Collections.sort(behandletListe, new Comparator<Album>() {
+		List<Album> albumene = albumService.finnAlbum(hylle.getId(), hylle.getValgtSjanger(), hylle.getValgtTidsperiode());
+		
+		Collections.sort(albumene, new Comparator<Album>() {
 			@Override
 			public int compare(Album a1, Album a2) {
 				if (a1 == null && a2 == null)
@@ -157,10 +141,10 @@ public class HjemController {
 			}
 		});
 
-		for (Album album : behandletListe)
+		for (Album album : albumene)
 			album.setErPaaHylle(true);
 
-		return behandletListe;
+		return albumene;
 	}
 
 }

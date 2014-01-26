@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.rakvag.hylla.domain.Artist;
 import org.rakvag.hylla.domain.Sjanger;
@@ -26,4 +27,13 @@ public class ArtistDAOImpl extends SpotifyEntitetDAOImpl<Artist> implements Arti
 		}
 		return sjangre;
 	}
+	
+	@Override
+	public List<Artist> hentArtister(List<Long> artistIder) {
+		TypedQuery<Artist> query = this.em.createQuery("select a from Artist a where id in (:artistIder)", Artist.class);
+		query.setParameter("artistIder", artistIder);
+		List<Artist> artistene = query.getResultList();
+		return artistene;
+	}
+
 }

@@ -9,10 +9,12 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.rakvag.hylla.daos.AlbumDAO;
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Artist;
 import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.domain.Spor;
+import org.rakvag.hylla.domain.Tidsperiode;
 import org.rakvag.spotifyapi.SpotifyAPI;
 import org.rakvag.spotifyapi.entity.SpotifyAlbum;
 import org.rakvag.spotifyapi.entity.SpotifyTrack;
@@ -33,6 +35,10 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 	@Inject
 	private ArtistService artistService;
 
+	void setAlbumDAO(AlbumDAO albumDAO) { //For å støtte enhetstesting
+		this.albumDAO = albumDAO;
+	}
+	
 	@Override
 	public List<Album> soekEtterAlbumISpotify(String artistnavn, String albumnavn, boolean taMedKorteAlbum) {
 		List<SpotifyAlbum> albumFraSoek = null;
@@ -106,6 +112,11 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 		}
 
 		return albumDAO.lagre(album);
+	}
+
+	@Override
+	public List<Album> finnAlbum(Long hylleId, Sjanger sjanger, Tidsperiode tidsperiode) {
+		return albumDAO.finnAlbum(hylleId, sjanger, tidsperiode);
 	}
 
 	private List<String> finnHvilkeAlbumSomSkalMedISoeketreffene(List<SpotifyAlbum> albumFraSoek) {
