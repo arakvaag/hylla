@@ -34,7 +34,6 @@ a:active {
 .album img {
 	width: 110px;
 	height: 110px;
-	border: solid #CFCFCF 1px;
 	box-shadow: 1px 3px 8px grey;
 	cursor: pointer;
 }
@@ -55,7 +54,6 @@ a:active {
 	width: 300px;
 	height: 300px;
 	padding: 10px;
-	border: solid #CFCFCF 1px;
 	box-shadow: 1px 3px 8px grey;
 }
 

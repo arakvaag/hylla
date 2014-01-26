@@ -11,22 +11,42 @@ import javax.persistence.TypedQuery;
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.domain.Tidsperiode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AlbumDAOImpl extends SpotifyEntitetDAOImpl<Album> implements AlbumDAO {
 
-	private static Logger logger = LoggerFactory.getLogger(AlbumDAOImpl.class.getName());
-	
 	@Inject
 	private ArtistDAO artistDAO;
 	
 	@Override
 	public List<Album> finnAlbum(Long hylleId, Sjanger sjanger, Tidsperiode tidsperiode) {
-		logger.debug("Starter finnAlbum");
+		List<BigInteger> albumIderBigInt = finnAlbumIdene(hylleId, sjanger, tidsperiode);
+		if (albumIderBigInt == null || albumIderBigInt.isEmpty())
+			return new ArrayList<Album>();
 		
+		List<Long> albumIder = new ArrayList<Long>();
+		for (BigInteger id : albumIderBigInt)
+			albumIder.add(id.longValue());
+		
+		Query nativeQ = em.createNativeQuery("select distinct(artistid) from album where id in (:albumIder)");
+		nativeQ.setParameter("albumIder", albumIder);
+		@SuppressWarnings("unchecked")
+		List<BigInteger> artistIderBigInt = nativeQ.getResultList();
+		List<Long> artistIder = new ArrayList<Long>();
+		for (BigInteger id : artistIderBigInt)
+			artistIder.add(id.longValue());
+		
+		//Kjøres for å unngå lazyloading av artister som skjer på en svært ineffektiv måte
+		artistDAO.hentArtister(artistIder);
+		
+		List<Album> albumene = hentAlbum(albumIder);
+		
+		return albumene;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<BigInteger> finnAlbumIdene(Long hylleId, Sjanger sjanger, Tidsperiode tidsperiode) {
 		StringBuilder queryString = new StringBuilder("select albumene_id from hyllealbum where hyller_id = :hylleId ");
 		if (sjanger != null || tidsperiode != null) {
 			queryString.append("and albumene_id in (select id from album where ");
@@ -60,32 +80,11 @@ public class AlbumDAOImpl extends SpotifyEntitetDAOImpl<Album> implements AlbumD
 			}
 			queryString.append(")");
 		}
-
 		Query nativeQ = em.createNativeQuery(queryString.toString());
 		nativeQ.setParameter("hylleId", hylleId);
 		if (sjanger != null)
 			nativeQ.setParameter("sjanger", sjanger.toString());
-		@SuppressWarnings("unchecked")
-		List<BigInteger> albumIderBigInt = nativeQ.getResultList();
-		List<Long> albumIder = new ArrayList<Long>();
-		for (BigInteger id : albumIderBigInt)
-			albumIder.add(id.longValue());
-		
-		nativeQ = em.createNativeQuery("select distinct(artistid) from album where id in (:albumIder)");
-		nativeQ.setParameter("albumIder", albumIder);
-		@SuppressWarnings("unchecked")
-		List<BigInteger> artistIderBigInt = nativeQ.getResultList();
-		List<Long> artistIder = new ArrayList<Long>();
-		for (BigInteger id : artistIderBigInt)
-			artistIder.add(id.longValue());
-		
-		//Kjøres for å unngå lazyloading av artister som skjer på en svært ineffektiv måte
-		artistDAO.hentArtister(artistIder);
-		
-		List<Album> albumene = hentAlbum(albumIder);
-		
-		logger.debug("Avslutter finnAlbum");
-		return albumene;
+		return nativeQ.getResultList();
 	}
 
 	@Override
