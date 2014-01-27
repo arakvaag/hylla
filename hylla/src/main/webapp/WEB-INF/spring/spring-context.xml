@@ -29,8 +29,8 @@
 		<!-- OPPRINNELIG URL <property name="url" value="jdbc:postgresql://localhost/hyllaDB" /> -->
 		<property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }" />
 		<property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }" />
-		<property name="maxConnectionsPerPartition" value="30" />
-		<property name="minConnectionsPerPartition" value="10" />
+		<property name="maxConnectionsPerPartition" value="6" />
+		<property name="minConnectionsPerPartition" value="1" />
 		<property name="partitionCount" value="3" />
 		<property name="acquireIncrement" value="5" />
 		<property name="statementsCacheSize" value="25" />
