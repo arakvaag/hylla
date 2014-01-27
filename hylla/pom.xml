@@ -94,6 +94,13 @@
 			<version>1.0.1.Final</version>
 		</dependency>
 
+		<!-- BoneCP JDBC connection pool -->
+		<dependency>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp</artifactId>
+			<version>0.8.0.RELEASE</version>
+		</dependency>
+
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
