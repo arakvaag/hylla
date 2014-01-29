@@ -32,8 +32,8 @@ a:active {
 }
 
 .album img {
-	width: 112px;
-	height: 112px;
+	width: 114px;
+	height: 114px;
 	box-shadow: 1px 3px 8px grey;
 	cursor: pointer;
 }
