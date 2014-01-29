@@ -72,10 +72,7 @@ public class HjemController {
 								@ModelAttribute("tidsperiode") String tidsperiode) {
 		
 		Hylle hylle = hyllaService.hentHylle(sesjonsdata.getHylleId());
-		HjemFilterForm filterForm = new HjemFilterForm();
-		filterForm.setValgtSjanger(sjanger);
-		filterForm.setValgtTidsperiode(tidsperiode);
-		hylle = oppdaterHylle(hylle, filterForm.getValgtSjanger(), filterForm.getValgtTidsperiode(), null);
+		hylle = oppdaterHylle(hylle, sjanger, tidsperiode, null);
 		
 		ModelAndView mv = new ModelAndView("_hylle");
 		mv.addObject("albumene", lagAlbumlisteForView(hylle));
