@@ -45,7 +45,7 @@ class SpotifyLookup implements Callable<SearchResult> {
 
 	private SearchResult utfoerHentPaaSpotifyURI(String spotifyURI) {
 		StringBuffer lookuprespons = new StringBuffer();
-		logger.info("Starter lookup av SpotifyURI: " + spotifyURI);
+		logger.debug("Starter lookup av SpotifyURI: " + spotifyURI);
 		InputStream is = null;
 		try {
 			StringBuffer urlStr = new StringBuffer("http://ws.spotify.com/lookup/1/.json?uri=" + spotifyURI);
@@ -76,7 +76,7 @@ class SpotifyLookup implements Callable<SearchResult> {
 			}
 		}
 
-		logger.info("Ferdig med lookup av SpotifyURI: " + spotifyURI);
+		logger.debug("Ferdig med lookup av SpotifyURI: " + spotifyURI);
 		return SearchResult.parseJsonSearchResult(lookuprespons.toString());
 	}
 

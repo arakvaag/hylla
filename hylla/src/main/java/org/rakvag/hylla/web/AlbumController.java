@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.rakvag.hylla.domain.Album;
+import org.rakvag.hylla.domain.Hylle;
 import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.services.AlbumService;
 import org.rakvag.hylla.services.HylleService;
@@ -34,8 +35,9 @@ public class AlbumController {
 		
 		List<Album> albumliste = albumService.soekEtterAlbumISpotify(artistnavn, albumnavn,
 				"true".equals(taMedKorteAlbum));
+		Hylle hylle = hylleService.hentHylle(sesjonsdata.getHylleId());
 		for (Album album : albumliste)
-			album.setErPaaHylleUtifraHylleId(sesjonsdata.getHylleId());
+			album.setErPaaHylle(hylle.getAlbumene().contains(album));
 
 		ModelAndView mv = new ModelAndView("soek");
 		mv.addObject("albumene", albumliste);
@@ -61,7 +63,7 @@ public class AlbumController {
 	public ModelAndView aapne(@ModelAttribute("albumId") String albumId) {
 		Album album = albumService.hentAlbum(Long.parseLong(albumId));
 		album.setSpor(albumService.hentSporenetilAlbumFraSpotify(album.getSpotifyURI()));
-		album.setErPaaHylleUtifraHylleId(sesjonsdata.getHylleId());
+		album.setErPaaHylle(hylleService.hentHylle(sesjonsdata.getHylleId()).getAlbumene().contains(album));
 		ModelAndView mv = new ModelAndView("album", "album", album);
 		DetaljerForm form = new DetaljerForm();
 		form.setSjanger(album.getSjanger().name());

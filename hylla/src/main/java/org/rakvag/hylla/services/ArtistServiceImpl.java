@@ -47,32 +47,37 @@ public class ArtistServiceImpl extends SpotifyServiceImpl implements ArtistServi
 	private Artist lastAlleAlbum(Artist artist) {
 		logger.info("Starter lastAlleAlbum med artistId: " + artist.getId());
 		SpotifyArtist spotifyArtist = spotifyAPI.hentArtistPaaSpotifyURI(artist.getSpotifyURI(), 10);
-		Set<String> urierPaaAlbumSomSkalHentes = new HashSet<String>();
-		Set<String> urierPaaAlbumSomFinnesIDB = new HashSet<String>();
+		
 		boolean lasterAlleAlbum = true;
+		Set<String> albumSomSkalLastes = new HashSet<String>();
 		for (SearchResult albumWrapper : spotifyArtist.getAlbums()) {
 			SpotifyAlbum album = albumWrapper.getAlbum();
 			if (artist.getSpotifyURI().equals(album.getArtistid())) {
-				if (albumDAO.finnesDenneIDB(album.getHref()))
-					urierPaaAlbumSomFinnesIDB.add(album.getHref());
-				else
-					urierPaaAlbumSomSkalHentes.add(album.getHref());
+				albumSomSkalLastes.add(album.getHref());
 			}
+		}
+
+		Set<String> urierPaaAlbumSomSkalHentes = new HashSet<String>();
+		Set<String> urierPaaAlbumSomFinnesIDB = albumDAO.hvilkeAvDisseFinnesIDB(albumSomSkalLastes);
+		for (String albumHref : albumSomSkalLastes) {
+			if (!urierPaaAlbumSomFinnesIDB.contains(albumHref))
+				urierPaaAlbumSomSkalHentes.add(albumHref);
 			if (urierPaaAlbumSomSkalHentes.size() > MAX_ANTALL_ALBUM_SOM_HENTES_SAMTIDIG) {
 				lasterAlleAlbum = false;
 				break;
 			}
 		}
-		Collection<SpotifyAlbum> spotifyAlbumene = spotifyAPI.hentAlbumPaaSpotifyURIer(urierPaaAlbumSomSkalHentes, 10);
+		
+		Collection<SpotifyAlbum> spotifyAlbumene = spotifyAPI.hentAlbumPaaSpotifyURIer(urierPaaAlbumSomSkalHentes, 5);
 		Collection<Album> albumene = Oversetter.oversettSpotifyAlbum(spotifyAlbumene, hentArtistersDefaultSjanger());
 		Map<String, String> bildelinker = spotifyAPI.hentBildelinker(urierPaaAlbumSomSkalHentes);
 		for (Album album : albumene)
 			album.setCoverartlink(bildelinker.get(album.getSpotifyURI()));
-		for (String albumURI : urierPaaAlbumSomFinnesIDB)
-			albumene.add(albumDAO.hentPaaSpotifyURI(albumURI));
+		albumene.addAll(albumDAO.hentPaaSpotifyURIer(urierPaaAlbumSomFinnesIDB).values());
 		Set<Album> synkedeAlbum = synkroniserAlbumInklArtistMedDBEtterSpotifyURI(albumene);
 		artist.setAlbum(synkedeAlbum);
 		artist.setErAlleAlbumLastet(lasterAlleAlbum);
+
 		logger.info("Fullført lastAlleAlbum med artistId: " + artist.getId());
 		return artist;
 	}

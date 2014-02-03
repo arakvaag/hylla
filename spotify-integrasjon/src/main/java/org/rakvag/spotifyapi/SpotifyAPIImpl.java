@@ -108,6 +108,7 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 
 	@Override
 	public SpotifyArtist hentArtistPaaSpotifyURI(String spotifyURI, int maksForsoek) {
+		logger.debug("Starter hentArtistPaaSpotifyURI med spotifyURI: " + spotifyURI);
 		SearchResult searchResult = null;
 		try {
 			searchResult = new SpotifyLookup(spotifyURI, maksForsoek).call();

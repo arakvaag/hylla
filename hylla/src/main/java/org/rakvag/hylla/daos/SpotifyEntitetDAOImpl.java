@@ -1,6 +1,8 @@
 package org.rakvag.hylla.daos;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -8,12 +10,18 @@ import java.util.Set;
 import javax.persistence.TypedQuery;
 
 import org.rakvag.hylla.domain.SpotifyEntitet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends EntitetDAOImpl<T> implements
 		SpotifyEntitetDAO<T> {
 
+	private final static Logger logger = LoggerFactory.getLogger(SpotifyEntitetDAOImpl.class.getName());
+	
 	@Override
 	public T hentPaaSpotifyURI(String spotifyURI) {
+		logger.info("Starter hentPaaSpotifyURI med spotifyURI:" + spotifyURI);
 		final StringBuffer queryString = new StringBuffer("SELECT o FROM ");
 		queryString.append(type.getSimpleName());
 		queryString.append(" o WHERE o.spotifyURI = :spotifyURI");
@@ -24,6 +32,7 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 
 	@Override
 	public Map<String, T> hentPaaSpotifyURIer(Set<String> spotifyURIene) {
+		logger.info("Starter hentPaaSpotifyURIer på " + spotifyURIene.size() + " spotifyURIer");
 		final StringBuffer queryString = new StringBuffer("SELECT o FROM ");
 		queryString.append(type.getSimpleName());
 		queryString.append(" o WHERE o.spotifyURI in (:spotifyURIListe)");
@@ -38,6 +47,7 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 
 	@Override
 	public boolean finnesDenneIDB(String spotifyURI) {
+		logger.info("Starter finnesDenneIDB med spotifyURI:" + spotifyURI);
 		final StringBuffer queryString = new StringBuffer("SELECT o.spotifyURI FROM ");
 		queryString.append(type.getSimpleName());
 		queryString.append(" o WHERE o.spotifyURI = :spotifyURI");
@@ -51,7 +61,21 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 	}
 
 	@Override
+	public Set<String> hvilkeAvDisseFinnesIDB(Set<String> spotifyURIer) {
+		logger.info("Starter hvilkeAvDisseFinnesIDB på " + spotifyURIer.size() + " spotifyURIer");
+		final StringBuffer queryString = new StringBuffer("SELECT o.spotifyURI FROM ");
+		queryString.append(type.getSimpleName());
+		queryString.append(" o WHERE o.spotifyURI in (:spotifyURIer)");
+		TypedQuery<String> query = this.em.createQuery(queryString.toString(), String.class);
+		query.setParameter("spotifyURIer", spotifyURIer);
+		List<String> uriFunnet = query.getResultList();
+		return new HashSet<String>(uriFunnet);
+	}
+
+	@Override
+	@Transactional
 	public T lagre(final T entitet) {
+		logger.info("Starter lagring av spotifyentitet med URI" + entitet.getSpotifyURI());
 		if (entitet.getId() != null)
 			return this.em.merge(entitet);
 		else if (finnesDenneIDB(entitet.getSpotifyURI())) {
@@ -61,13 +85,31 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 			return entitet;
 		}
 	}
-
+	
 	@Override
-	public T erstattMedEksisterendeSpotifyentitetEllerLagreNy(T entitet) {
-		if (finnesDenneIDB(entitet.getSpotifyURI()))
-			return hentPaaSpotifyURI(entitet.getSpotifyURI());
-		else
-			return lagre(entitet);
+	@Transactional
+	public Map<String, T> lagre(Collection<T> entiter) {
+		logger.info("Starter lagring av " + entiter.size() + "spotifyentiteter");
+		
+		if (entiter.isEmpty())
+			return new HashMap<String, T>();
+		
+		Map<String, T> entitMap = new HashMap<String, T>();
+		for (T entitet : entiter) {
+			entitMap.put(entitet.getSpotifyURI(), entitet);
+		}
+		Map<String, T> entiterIDB = hentPaaSpotifyURIer(entitMap.keySet());
+		
+		for (String spotifyURI : entitMap.keySet()) {
+			if (!entiterIDB.containsKey(spotifyURI)) {
+				T entitet = entitMap.get(spotifyURI);
+				this.em.persist(entitet);
+				entiterIDB.put(spotifyURI, entitet);
+			}
+		}
+		
+		return entiterIDB;
 	}
+
 
 }

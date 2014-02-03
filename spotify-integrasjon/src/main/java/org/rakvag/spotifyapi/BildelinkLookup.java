@@ -26,7 +26,7 @@ public class BildelinkLookup implements Callable<BildelinkInfo> {
 	@Override
 	public BildelinkInfo call() throws Exception {
 		StringBuffer html = new StringBuffer();
-		logger.info("Henter link til bilde tilhørende URI: " + this.spotifyURI);
+		logger.debug("Henter link til bilde tilhørende URI: " + this.spotifyURI);
 		InputStream is = null;
 		try {
 			String spotifylink = null;
@@ -71,7 +71,7 @@ public class BildelinkLookup implements Callable<BildelinkInfo> {
 		if (indeksStart < 1)
 			return null;
 
-		logger.info("Ferdig å hente link til covertart på album med URI: " + this.spotifyURI);
+		logger.debug("Ferdig å hente link til covertart på album med URI: " + this.spotifyURI);
 		return new BildelinkInfo(this.spotifyURI, html.substring(indeksStart, indeksSlutt));
 	}
 

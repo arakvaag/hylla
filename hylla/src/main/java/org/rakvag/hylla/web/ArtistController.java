@@ -8,7 +8,9 @@ import javax.inject.Inject;
 
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Artist;
+import org.rakvag.hylla.domain.Hylle;
 import org.rakvag.hylla.services.ArtistService;
+import org.rakvag.hylla.services.HylleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -27,6 +29,8 @@ public class ArtistController {
 	@Inject
 	private ArtistService artistService;
 	@Inject
+	private HylleService hylleService;
+	@Inject
 	private Sesjonsdata sesjonsdata;
 
 	@RequestMapping(value = "/artist/", method = RequestMethod.GET)
@@ -37,9 +41,10 @@ public class ArtistController {
 		List<Album> albumene = new ArrayList<Album>();
 		
 		logger.debug("Starter filtrering og sortering av artistens " + artist.getAlbum().size() + " album");
+		Hylle hylle = hylleService.hentHylle(sesjonsdata.getHylleId());
 		for (Album album : artist.getAlbum()) {
 			if ((!album.erEtKortAlbum()) && album.isTilgjengeligINorge()) {
-				album.setErPaaHylleUtifraHylleId(sesjonsdata.getHylleId());
+				album.setErPaaHylle(hylle.getAlbumene().contains(album));
 				albumene.add(album);
 			}
 		}

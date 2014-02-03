@@ -1,5 +1,6 @@
 package org.rakvag.hylla.daos;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,10 +14,13 @@ public interface SpotifyEntitetDAO<T extends SpotifyEntitet> extends EntitetDAO<
 
 	boolean finnesDenneIDB(String spotifyURI);
 
-	@Transactional
-	T erstattMedEksisterendeSpotifyentitetEllerLagreNy(final T entitet);
+	Set<String> hvilkeAvDisseFinnesIDB(Set<String> hrefs);
 
 	@Override
 	@Transactional
 	T lagre(final T entitet);
+	
+	@Transactional
+	Map<String, T> lagre(Collection<T> entiter);
+
 }

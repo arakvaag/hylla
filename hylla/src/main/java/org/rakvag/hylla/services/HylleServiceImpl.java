@@ -1,15 +1,11 @@
 package org.rakvag.hylla.services;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.rakvag.hylla.daos.AlbumDAO;
 import org.rakvag.hylla.daos.HylleDAO;
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Hylle;
-import org.rakvag.hylla.domain.Sjanger;
-import org.rakvag.hylla.domain.Tidsperiode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,12 +56,6 @@ public class HylleServiceImpl implements HylleService {
 			throw new RuntimeException("Albumet fantes ikke på hylla");
 		
 		return hylleDAO.lagre(hylle);
-	}
-
-	@Override
-	public List<Album> hentFiltrertListeAvHyllesAlbum(Long hylleId, Sjanger sjanger, Tidsperiode tidsperiode) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

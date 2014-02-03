@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
@@ -38,7 +39,7 @@ public class Hylle implements DBEntitet {
 	private String spotifyURIAapentAlbum;
 
 	@ManyToMany(fetch=FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "HylleAlbum")
+	@JoinTable(name = "HylleAlbum", joinColumns = @JoinColumn(name = "hyller_id"), inverseJoinColumns = @JoinColumn(name = "albumene_id"))
 	private Set<Album> albumene;
 
 	public Long getId() {

@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
@@ -46,8 +44,6 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = true)
 	private Sjanger sjanger;
-	@ManyToMany(mappedBy = "albumene", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private Set<Hylle> hyller;
 	@Column(nullable = true)
 	private String coverartlink;
 	@Column(nullable = false)
@@ -119,18 +115,6 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 		this.erPaaHylle = erPaaHylle;
 	}
 	
-	public void setErPaaHylleUtifraHylleId(long hylleId) {
-		erPaaHylle = false;
-		if (hyller != null) {
-			for (Hylle hylle : hyller) {
-				if (hylle.getId() == hylleId) {
-					erPaaHylle = true;
-					break;
-				}
-			}
-		}
-	}
-
 	@Override
 	public int compareTo(Album other) {
 		if (this.equals(other))
@@ -147,7 +131,6 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 		result = prime * result + ((artist == null) ? 0 : artist.hashCode());
 		result = prime * result + ((coverartlink == null) ? 0 : coverartlink.hashCode());
 		result = prime * result + (erPaaHylle ? 1231 : 1237);
-		result = prime * result + ((hyller == null) ? 0 : hyller.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lengde == null) ? 0 : lengde.hashCode());
 		result = prime * result + ((navn == null) ? 0 : navn.hashCode());
@@ -224,14 +207,6 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 
 	public void setSjanger(Sjanger sjanger) {
 		this.sjanger = sjanger;
-	}
-
-	public Set<Hylle> getHyller() {
-		return hyller;
-	}
-
-	public void setHyller(Set<Hylle> hyller) {
-		this.hyller = hyller;
 	}
 
 	public Set<Spor> getSpor() {
