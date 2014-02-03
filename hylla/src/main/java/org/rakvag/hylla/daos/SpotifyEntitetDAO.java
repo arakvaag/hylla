@@ -21,6 +21,6 @@ public interface SpotifyEntitetDAO<T extends SpotifyEntitet> extends EntitetDAO<
 	T lagre(final T entitet);
 	
 	@Transactional
-	Map<String, T> lagre(Collection<T> entiter);
+	Map<String, T> opprett(Collection<T> entiter);
 
 }

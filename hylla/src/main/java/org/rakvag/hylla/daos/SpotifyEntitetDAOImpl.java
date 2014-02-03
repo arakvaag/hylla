@@ -69,16 +69,18 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 		TypedQuery<String> query = this.em.createQuery(queryString.toString(), String.class);
 		query.setParameter("spotifyURIer", spotifyURIer);
 		List<String> uriFunnet = query.getResultList();
+
+		logger.info("Avslutter hvilkeAvDisseFinnesIDB på " + spotifyURIer.size() + " spotifyURIer");
 		return new HashSet<String>(uriFunnet);
 	}
 
 	@Override
 	@Transactional
 	public T lagre(final T entitet) {
-		logger.info("Starter lagring av spotifyentitet med URI" + entitet.getSpotifyURI());
-		if (entitet.getId() != null)
+		logger.info("Starter lagring av spotifyentitet med URI: " + entitet.getSpotifyURI());
+		if (entitet.getId() != null) {
 			return this.em.merge(entitet);
-		else if (finnesDenneIDB(entitet.getSpotifyURI())) {
+		} else if (finnesDenneIDB(entitet.getSpotifyURI())) {
 			throw new RuntimeException("Spotify-entiteten finnes allerede i databasen, kan ikke lagre");
 		} else {
 			this.em.persist(entitet);
@@ -88,8 +90,8 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 	
 	@Override
 	@Transactional
-	public Map<String, T> lagre(Collection<T> entiter) {
-		logger.info("Starter lagring av " + entiter.size() + "spotifyentiteter");
+	public Map<String, T> opprett(Collection<T> entiter) {
+		logger.info("Starter opprett med " + entiter.size() + " spotifyentiteter");
 		
 		if (entiter.isEmpty())
 			return new HashMap<String, T>();
@@ -101,13 +103,18 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 		Map<String, T> entiterIDB = hentPaaSpotifyURIer(entitMap.keySet());
 		
 		for (String spotifyURI : entitMap.keySet()) {
-			if (!entiterIDB.containsKey(spotifyURI)) {
-				T entitet = entitMap.get(spotifyURI);
-				this.em.persist(entitet);
-				entiterIDB.put(spotifyURI, entitet);
-			}
+			if (entiterIDB.containsKey(spotifyURI))
+				throw new RuntimeException("Spotify-entitet med samme spotifyURI finnes allerede i databasen, kan ikke opprette ny rad");
+
+			T entitet = entitMap.get(spotifyURI);
+			if (entitet.getId() != null)
+				throw new RuntimeException("Denne Spotify-entiteten er hentet fra databasen, kan ikke opprettes som ny");
+			
+			this.em.persist(entitet);
+			entiterIDB.put(spotifyURI, entitet);
 		}
 		
+		logger.info("Avslutter opprett med " + entiter.size() + " spotifyentiteter");
 		return entiterIDB;
 	}
 

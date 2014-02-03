@@ -33,15 +33,22 @@ public class ArtistServiceImpl extends SpotifyServiceImpl implements ArtistServi
 		Artist artist = artistDAO.hent(artistID);
 		
 		if (!Artist.URI_VARIOUS_ARTISTS_ARTIST.equals(artist.getSpotifyURI())) {
-			if (!artist.isErAlleAlbumLastet())
+			boolean artistEndret = false;
+			if (!artist.isErAlleAlbumLastet()) {
 				artist = lastAlleAlbum(artist);
+				artistEndret = artist.isErAlleAlbumLastet();
+			}
 	
-			if (artist.getBildelink() == null)
+			if (artist.getBildelink() == null) {
 				artist.setBildelink(spotifyAPI.hentBildelink(artist.getSpotifyURI()));
+				artistEndret = true;
+			}
+			if (artistEndret) 
+				artist = artistDAO.lagre(artist);
 		}
 
 		logger.info("Fullført tjenesten hentArtist med artistID " + artistID);
-		return artistDAO.lagre(artist);
+		return artist;
 	}
 
 	private Artist lastAlleAlbum(Artist artist) {
@@ -62,7 +69,7 @@ public class ArtistServiceImpl extends SpotifyServiceImpl implements ArtistServi
 		for (String albumHref : albumSomSkalLastes) {
 			if (!urierPaaAlbumSomFinnesIDB.contains(albumHref))
 				urierPaaAlbumSomSkalHentes.add(albumHref);
-			if (urierPaaAlbumSomSkalHentes.size() > MAX_ANTALL_ALBUM_SOM_HENTES_SAMTIDIG) {
+			if (urierPaaAlbumSomSkalHentes.size() >= MAX_ANTALL_ALBUM_SOM_HENTES_SAMTIDIG) {
 				lasterAlleAlbum = false;
 				break;
 			}

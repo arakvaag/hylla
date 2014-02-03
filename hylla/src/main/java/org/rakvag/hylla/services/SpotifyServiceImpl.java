@@ -50,7 +50,8 @@ public abstract class SpotifyServiceImpl implements SpotifyService {
 		albumURISomSkalLagres.removeAll(albumIDB.keySet());
 		
 		Set<Album> albumSomSkalLagres = new HashSet<Album>();
-		for (Album album : vaskedeAlbum.values()) {
+		for (String albumURI : albumURISomSkalLagres) {
+			Album album = vaskedeAlbum.get(albumURI);
 			Artist artist = artisterIDB.get(album.getArtist().getSpotifyURI());
 			album.setArtist(artist);
 			if (artist.getAlbum() == null)
@@ -58,7 +59,7 @@ public abstract class SpotifyServiceImpl implements SpotifyService {
 			artist.getAlbum().add(album);
 			albumSomSkalLagres.add(album);
 		}
-		albumIDB.putAll(albumDAO.lagre(albumSomSkalLagres));
+		albumIDB.putAll(albumDAO.opprett(albumSomSkalLagres));
 		
 		logger.info("Fullført synkroniserAlbumInklArtistMedDBEtterSpotifyURI på " + albumene.size() + " album");
 		return new HashSet<Album>(albumIDB.values());
@@ -76,7 +77,8 @@ public abstract class SpotifyServiceImpl implements SpotifyService {
 			if (!artisterIDB.containsKey(artist.getSpotifyURI()))
 				nyeArtister.put(artist.getSpotifyURI(), artist);
 		}
-		artisterIDB.putAll(artistDAO.lagre(nyeArtister.values()));
+		if (!nyeArtister.isEmpty())
+			artisterIDB.putAll(artistDAO.opprett(nyeArtister.values()));
 		
 		return artisterIDB;
 	}

@@ -187,6 +187,7 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 	}
 
 	private List<SearchResult> hentPaaSpotifyURIer(List<String> spotifyURIer, int maksForsoek) {
+		logger.info("Starter hentPaaSpotifyURIer med " + spotifyURIer.size() + " URIer");
 		List<SpotifyLookup> oppslag = new ArrayList<SpotifyLookup>();
 		for (String spotifyURI : spotifyURIer) {
 			if (spotifyURI != null)
@@ -235,6 +236,7 @@ public class SpotifyAPIImpl implements SpotifyAPI {
 			}
 		}
 
+		logger.info("Avslutter hentPaaSpotifyURIer med " + spotifyURIer.size() + " URIer");
 		return resultatene;
 	}
 
