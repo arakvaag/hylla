@@ -55,7 +55,7 @@
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="databasePlatform" value="org.hibernate.dialect.PostgreSQLDialect" />
-				<property name="showSql" value="false" />
+				<property name="showSql" value="true" />
 			</bean>
 		</property>
 		<property name="packagesToScan" value="org.rakvag.hylla.domain" />

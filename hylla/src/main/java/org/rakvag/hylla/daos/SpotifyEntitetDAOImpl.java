@@ -114,7 +114,7 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 			entiterIDB.put(spotifyURI, entitet);
 		}
 		
-		logger.info("Avslutter opprett med " + entiter.size() + " spotifyentiteter");
+		logger.info("Avslutter opprett");
 		return entiterIDB;
 	}
 
