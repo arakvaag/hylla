@@ -120,7 +120,12 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 		if (this.equals(other))
 			return 0;
 		
-		return Float.compare(this.popularitet, other.getPopularitet()) * -1;
+		int orden = Float.compare(this.popularitet, other.getPopularitet()) * -1;
+		if (orden != 0)
+			return orden;
+		else { //Hvis popularitet er lik for begge, sorter på spotifyURI for å få konsekvent resultat
+			return this.spotifyURI.compareTo(other.getSpotifyURI());
+		}
 	}
 
 	@Override

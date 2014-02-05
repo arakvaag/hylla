@@ -1,6 +1,7 @@
 package org.rakvag.hylla.services;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.rakvag.hylla.domain.Artist;
 import org.rakvag.hylla.domain.Sjanger;
@@ -10,6 +11,6 @@ public interface ArtistService extends SpotifyService {
 
 	Artist lagreArtist(Artist artist);
 
-	Map<String, Sjanger> hentArtistersDefaultSjanger();
+	Map<String, Sjanger> hentArtistersDefaultSjanger(Set<String> artistURIer);
 
 }

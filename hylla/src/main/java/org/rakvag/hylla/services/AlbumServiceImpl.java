@@ -41,6 +41,7 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 	
 	@Override
 	public List<Album> soekEtterAlbumISpotify(String artistnavn, String albumnavn, boolean taMedKorteAlbum) {
+		logger.info("Starter tjenesten soekEtterAlbumISpotify med artistnavn " + artistnavn + " og albumnavn " + albumnavn);
 		List<SpotifyAlbum> albumFraSoek = null;
 		try {
 			albumFraSoek = spotifyAPI.soekEtterAlbum(artistnavn, albumnavn, 20);
@@ -53,9 +54,11 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 		List<String> skalVisesPaaSiden = finnHvilkeAlbumSomSkalMedISoeketreffene(albumFraSoek);
 		Collection<String> maaHentes = new HashSet<String>(skalVisesPaaSiden);
 		maaHentes.removeAll(finnHvilkeAlbumSomFinnesIDB(skalVisesPaaSiden));
-		Map<String, Sjanger> artistersSjanger = artistService.hentArtistersDefaultSjanger();
-		Collection<Album> albumHentetFraSpotify = Oversetter.oversettSpotifyAlbum(
-				spotifyAPI.hentAlbumPaaSpotifyURIer(maaHentes, 10), artistersSjanger);
+		
+		Collection<SpotifyAlbum> spotifyAlbumHentet = spotifyAPI.hentAlbumPaaSpotifyURIer(maaHentes, 10);
+		Set<String> artistURIer = Oversetter.hentAlleArtistURIer(spotifyAlbumHentet);
+		Map<String, Sjanger> artistersSjanger = artistService.hentArtistersDefaultSjanger(artistURIer);
+		Collection<Album> albumHentetFraSpotify = Oversetter.oversettSpotifyAlbum(spotifyAlbumHentet, artistersSjanger);
 		albumHentetFraSpotify = synkroniserAlbumInklArtistMedDBEtterSpotifyURI(albumHentetFraSpotify);
 
 		Map<String, String> coverartLinker = spotifyAPI.hentBildelinker(maaHentes);
@@ -72,21 +75,25 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 				soeketreffene.add(album);
 		}
 
+		logger.info("Avslutter tjenesten soekEtterAlbumISpotify med artistnavn " + artistnavn + " og albumnavn " + albumnavn);
 		return soeketreffene;
 	}
 
 	@Override
 	public Album hentAlbum(long albumID) {
+		logger.info("Starter tjenesten hentAlbum med albumID " + albumID);
 		Album album = albumDAO.hent(albumID);
 		if (album.getSjanger() == Sjanger.IKKE_SATT && album.getArtist().getDefaultSjanger() != Sjanger.IKKE_SATT) {
 			album.setSjanger(album.getArtist().getDefaultSjanger());
 			album = albumDAO.lagre(album);
 		}
+		logger.info("Avslutter tjenesten hentAlbum med albumID " + albumID);
 		return album;
 	}
 
 	@Override
 	public Set<Spor> hentSporenetilAlbumFraSpotify(String albumsSpotifyURI) {
+		logger.info("Starter tjenesten hentSporenetilAlbumFraSpotify med albumsSpotifyURI " + albumsSpotifyURI);
 		Set<Spor> sporene = new HashSet<Spor>();
 
 		ArrayList<String> spotifyURIer = new ArrayList<String>();
@@ -99,11 +106,13 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 				sporene.add(Oversetter.oversettSpotifyTrack(spotifyTrack));
 		}
 
+		logger.info("Avslutter tjenesten hentSporenetilAlbumFraSpotify med albumsSpotifyURI " + albumsSpotifyURI);
 		return sporene;
 	}
 
 	@Override
 	public Album lagreAlbum(Album album) {
+		logger.info("Starter tjenesten lagreAlbum med album " + album.getNavn());
 		album.setArtist(artistService.lagreArtist(album.getArtist()));
 		Artist artist = album.getArtist();
 		if (Sjanger.IKKE_SATT.equals(artist.getDefaultSjanger()) 
@@ -111,15 +120,18 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 			artist.setDefaultSjanger(album.getSjanger());
 		}
 
+		logger.info("Avslutter tjenesten lagreAlbum med album " + album.getNavn());
 		return albumDAO.lagre(album);
 	}
 
 	@Override
 	public List<Album> finnAlbum(Long hylleId, Sjanger sjanger, Tidsperiode tidsperiode) {
+		logger.info("Kjører tjenesten finnAlbum");
 		return albumDAO.finnAlbum(hylleId, sjanger, tidsperiode);
 	}
 
 	private List<String> finnHvilkeAlbumSomSkalMedISoeketreffene(List<SpotifyAlbum> albumFraSoek) {
+		logger.info("Starter tjenesten finnHvilkeAlbumSomSkalMedISoeketreffene med " + albumFraSoek.size() + " album som input");
 		List<String> URIerPaaAlbumSomSkalHentesOpp = new ArrayList<String>();
 		for (SpotifyAlbum albumet : albumFraSoek) {
 			if (!albumet.erTilgjengeligINorge())
@@ -128,15 +140,18 @@ public class AlbumServiceImpl extends SpotifyServiceImpl implements AlbumService
 			if (URIerPaaAlbumSomSkalHentesOpp.size() >= MAX_ANTALL_ALBUM_FRA_SOEK)
 				break;
 		}
+		logger.info("Avslutter tjenesten finnHvilkeAlbumSomSkalMedISoeketreffene med " + albumFraSoek.size() + " album som input");
 		return URIerPaaAlbumSomSkalHentesOpp;
 	}
 
 	private Collection<String> finnHvilkeAlbumSomFinnesIDB(List<String> albumURIer) {
+		logger.info("Starter tjenesten finnHvilkeAlbumSomFinnesIDB med " + albumURIer.size() + " albumURIer som input");
 		Collection<String> finnesIDB = new HashSet<String>();
 		for (String uri : albumURIer) {
 			if (albumDAO.finnesDenneIDB(uri))
 				finnesIDB.add(uri);
 		}
+		logger.info("Avslutter tjenesten finnHvilkeAlbumSomFinnesIDB med " + albumURIer.size() + " albumURIer som input");
 		return finnesIDB;
 	}
 

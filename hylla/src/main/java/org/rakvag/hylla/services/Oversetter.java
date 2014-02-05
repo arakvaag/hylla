@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Artist;
 import org.rakvag.hylla.domain.Sjanger;
@@ -91,6 +92,20 @@ public class Oversetter {
 		}
 		artist.setAlbum(album);
 		return artist;
+	}
+
+	public static Set<String> hentAlleArtistURIer(Collection<SpotifyAlbum> albumene) {
+		Set<String> artistURIer = new HashSet<String>();
+		for (SpotifyAlbum album : albumene) {
+			if (StringUtils.isNotBlank(album.getArtistid())) {
+				artistURIer.add(album.getArtistid());
+				continue;
+			} else if (album.getArtists() != null && !album.getArtists().isEmpty()) {
+				artistURIer.add(album.getArtists().iterator().next().getHref());
+			}
+		}
+		
+		return artistURIer;
 	}
 
 }

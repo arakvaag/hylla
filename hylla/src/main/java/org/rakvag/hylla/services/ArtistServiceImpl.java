@@ -76,7 +76,8 @@ public class ArtistServiceImpl extends SpotifyServiceImpl implements ArtistServi
 		}
 		
 		Collection<SpotifyAlbum> spotifyAlbumene = spotifyAPI.hentAlbumPaaSpotifyURIer(urierPaaAlbumSomSkalHentes, 5);
-		Collection<Album> albumene = Oversetter.oversettSpotifyAlbum(spotifyAlbumene, hentArtistersDefaultSjanger());
+		Set<String> artistURIer = Oversetter.hentAlleArtistURIer(spotifyAlbumene);
+		Collection<Album> albumene = Oversetter.oversettSpotifyAlbum(spotifyAlbumene, hentArtistersDefaultSjanger(artistURIer));
 		Map<String, String> bildelinker = spotifyAPI.hentBildelinker(urierPaaAlbumSomSkalHentes);
 		for (Album album : albumene)
 			album.setCoverartlink(bildelinker.get(album.getSpotifyURI()));
@@ -91,12 +92,14 @@ public class ArtistServiceImpl extends SpotifyServiceImpl implements ArtistServi
 
 	@Override
 	public Artist lagreArtist(Artist artist) {
+		logger.info("Kjører tjenesten lagreArtist med artist " + artist.getNavn());
 		return artistDAO.lagre(artist);
 	}
 
 	@Override
-	public Map<String, Sjanger> hentArtistersDefaultSjanger() {
-		return artistDAO.hentArtistersDefaultSjanger();
+	public Map<String, Sjanger> hentArtistersDefaultSjanger(Set<String> artistURIer) {
+		logger.info("Kjører tjenesten hentArtistersDefaultSjanger med " + artistURIer.size() + " artistURIer");
+		return artistDAO.hentArtistersDefaultSjanger(artistURIer);
 	}
 
 }

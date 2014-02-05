@@ -14,6 +14,8 @@ import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.domain.Tidsperiode;
 import org.rakvag.hylla.services.AlbumService;
 import org.rakvag.hylla.services.HylleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,6 +32,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @SessionAttributes
 public class HjemController {
 
+	private final static Logger logger = LoggerFactory.getLogger(HjemController.class);
+	
 	private final static String KODE_ALLE_SJANGRE = "ALLE";
 	private final static String KODE_ALLE_TIDSPERIODER = "ALLE";
 
@@ -44,6 +48,7 @@ public class HjemController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView hjem(@RequestHeader("User-Agent") String userAgent) {
+		logger.info("Starter hjem-metoden");
 		Hylle hylle = hyllaService.hentHylle(sesjonsdata.getHylleId());
 
 		Map<String, String> sjangre = Sjanger.lagSjangerMap();
@@ -63,6 +68,7 @@ public class HjemController {
 		mv.addObject("sjangre", sjangre);
 		mv.addObject("tidsperioder", tidsperioder);
 
+		logger.info("Avslutter hjem-metoden");
 		return mv;
 	}
 
@@ -71,25 +77,32 @@ public class HjemController {
 								@ModelAttribute("sjanger") String sjanger, 
 								@ModelAttribute("tidsperiode") String tidsperiode) {
 		
+		logger.info("Starter filtrer-metoden med sjanger " + sjanger + " og tidsperiode " + tidsperiode);
 		Hylle hylle = hyllaService.hentHylle(sesjonsdata.getHylleId());
 		hylle = oppdaterHylle(hylle, sjanger, tidsperiode, null);
 		
 		ModelAndView mv = new ModelAndView("_hylle");
 		mv.addObject("albumene", lagAlbumlisteForView(hylle));
+
+		logger.info("Avslutter filtrer-metoden med sjanger " + sjanger + " og tidsperiode " + tidsperiode);
 		return mv;
 	}
 
 	@RequestMapping(value = "/aapne", method = RequestMethod.GET)
 	public String aapneMusikk(@ModelAttribute("spotifyURI") String spotifyURI, RedirectAttributes redirAttr) {
+		logger.info("Starter metode aapneMusikk med spotifyURI " + spotifyURI);
 		oppdaterHylle(hyllaService.hentHylle(sesjonsdata.getHylleId()), null, null, spotifyURI);
+		logger.info("Avslutter metode aapneMusikk (redirigerer til hjem-metoden)");
 		return "redirect:/";
 	}
 
 	@RequestMapping(value = "/lagreAapentAlbum", method = RequestMethod.POST)
 	public @ResponseBody String lagreAapentAlbum(@ModelAttribute("spotifyURI") String spotifyURI) {
+		logger.info("Starter metode lagreAapentAlbum med spotifyURI " + spotifyURI);
 		Hylle hylle = hyllaService.hentHylle(sesjonsdata.getHylleId());
 		hylle.setSpotifyURIAapentAlbum(spotifyURI);
 		hyllaService.lagreHylle(hylle);
+		logger.info("Avslutter metode lagreAapentAlbum med spotifyURI " + spotifyURI);
 		return "";
 	}
 
