@@ -19,8 +19,8 @@ public class Artist implements SpotifyEntitet {
 
 	public static final String URI_VARIOUS_ARTISTS_ARTIST = "spotify:artist:VA";
 
-	private final static int MAX_LENGDE_KORTNAVN = 18;
-	private final static int MAX_LENGDE_MOBILNAVN = 17;
+	private final static int MAX_LENGDE_KORTNAVN = 17;
+	private final static int MAX_LENGDE_MOBILNAVN = 16;
 	
 	@Id
 	@SequenceGenerator(name="artist_id_seq", sequenceName="artist_id_seq", allocationSize=10)
