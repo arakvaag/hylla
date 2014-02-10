@@ -19,6 +19,9 @@ public class ArtistDAOImpl extends SpotifyEntitetDAOImpl<Artist> implements Arti
 	@Override
 	public Map<String, Sjanger> hentArtistersDefaultSjanger(Set<String> artistURIer) {
 		Map<String, Sjanger> sjangre = new HashMap<String, Sjanger>();
+		if (artistURIer.isEmpty())
+			return sjangre;
+		
 		Query query = this.em.createQuery("SELECT a.spotifyURI, a.defaultSjanger FROM Artist a " +
 				"WHERE a.defaultSjanger <> 'IKKE_SATT' and a.spotifyURI in (:artistURIer)");
 		query.setParameter("artistURIer", artistURIer);

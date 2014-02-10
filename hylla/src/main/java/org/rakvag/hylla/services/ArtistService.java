@@ -6,7 +6,8 @@ import java.util.Set;
 import org.rakvag.hylla.domain.Artist;
 import org.rakvag.hylla.domain.Sjanger;
 
-public interface ArtistService extends SpotifyService {
+public interface ArtistService {
+	
 	Artist hentArtist(long artistID);
 
 	Artist lagreArtist(Artist artist);

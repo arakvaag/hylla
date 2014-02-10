@@ -3,6 +3,7 @@ package org.rakvag.hylla.services;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import org.rakvag.spotifyapi.entity.SpotifyTrack;
 public class Oversetter {
 	
 	public static Collection<Album> oversettSpotifyAlbum(Collection<SpotifyAlbum> spotifyAlbumene, Map<String, Sjanger> artistersSjanger) {
+		//TODO Skal ikke ha ansvaret for å sette sjanger. Må refaktoreres
 		Collection<Album> domAlbumene = new HashSet<Album>();
 		for (SpotifyAlbum spotifyAlbum : spotifyAlbumene) {
 			Sjanger artistsSjanger = Sjanger.IKKE_SATT;
@@ -94,7 +96,7 @@ public class Oversetter {
 		return artist;
 	}
 
-	public static Set<String> hentAlleArtistURIer(Collection<SpotifyAlbum> albumene) {
+	public static Set<String> hentArtistURIene(Collection<SpotifyAlbum> albumene) {
 		Set<String> artistURIer = new HashSet<String>();
 		for (SpotifyAlbum album : albumene) {
 			if (StringUtils.isNotBlank(album.getArtistid())) {
@@ -106,6 +108,14 @@ public class Oversetter {
 		}
 		
 		return artistURIer;
+	}
+
+	public static Set<String> hentAlbumURIene(List<SpotifyAlbum> albumene) {
+		Set<String> albumURIene = new HashSet<String>();
+		for (SpotifyAlbum album : albumene) {
+			albumURIene.add(album.getHref());
+		}
+		return albumURIene;
 	}
 
 }

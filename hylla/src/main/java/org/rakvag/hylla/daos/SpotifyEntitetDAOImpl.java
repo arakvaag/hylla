@@ -100,12 +100,9 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 		for (T entitet : entiter) {
 			entitMap.put(entitet.getSpotifyURI(), entitet);
 		}
-		Map<String, T> entiterIDB = hentPaaSpotifyURIer(entitMap.keySet());
+		Map<String, T> entiterIDB = new HashMap<String, T>();
 		
 		for (String spotifyURI : entitMap.keySet()) {
-			if (entiterIDB.containsKey(spotifyURI))
-				throw new RuntimeException("Spotify-entitet med samme spotifyURI finnes allerede i databasen, kan ikke opprette ny rad");
-
 			T entitet = entitMap.get(spotifyURI);
 			if (entitet.getId() != null)
 				throw new RuntimeException("Denne Spotify-entiteten er hentet fra databasen, kan ikke opprettes som ny");
