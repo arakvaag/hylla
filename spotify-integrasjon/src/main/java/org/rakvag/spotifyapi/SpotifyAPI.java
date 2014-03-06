@@ -15,7 +15,7 @@ public interface SpotifyAPI {
 
 	Map<String, SpotifyArtist> hentArtisterPaaSpotifyURIer(Collection<String> spotifyURIer, int maksForsoek);
 
-	SpotifyArtist hentArtistPaaSpotifyURI(String spotifyURI, int i);
+	SpotifyArtist hentArtistPaaSpotifyURI(String spotifyURI, int maksForsoek);
 
 	Map<String, SpotifyTrack> hentTracksPaaSpotifyURIer(Collection<String> spotifyURIer, int maksForsoek);
 

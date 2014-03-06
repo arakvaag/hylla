@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Artist;
 import org.rakvag.hylla.domain.Sjanger;
 import org.springframework.stereotype.Repository;
@@ -41,5 +42,20 @@ public class ArtistDAOImpl extends SpotifyEntitetDAOImpl<Artist> implements Arti
 		List<Artist> artistene = query.getResultList();
 		return artistene;
 	}
+	
+	@Override
+	public Artist lagre(final Artist artist) {
+		for(Album album : artist.getAlbum()) {
+			if (album.getId() == null)
+				this.em.persist(album);
+		}
+		
+		if (artist.getId() != null)
+			return this.em.merge(artist);
+
+		this.em.persist(artist);
+		return artist;
+	}
+
 
 }

@@ -1,6 +1,6 @@
 package org.rakvag.hylla.domain;
 
-import java.util.Set;
+import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,7 +40,7 @@ public class Hylle implements DBEntitet {
 
 	@ManyToMany(fetch=FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "HylleAlbum", joinColumns = @JoinColumn(name = "hyller_id"), inverseJoinColumns = @JoinColumn(name = "albumene_id"))
-	private Set<Album> albumene;
+	private Collection<Album> albumene;
 
 	public Long getId() {
 		return id;
@@ -78,7 +78,7 @@ public class Hylle implements DBEntitet {
 		this.spotifyURIAapentAlbum = spotifyURIAapentAlbum;
 	}
 
-	public Set<Album> getAlbumene() {
+	public Collection<Album> getAlbumene() {
 		return albumene;
 	}
 

@@ -1,8 +1,6 @@
 package org.rakvag.hylla.services;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Artist;
@@ -16,12 +14,14 @@ public interface AlbumService {
 
 	Album hentAlbum(long albumID);
 	
-	Set<Spor> hentSporenetilAlbumFraSpotify(String albumsSpotifyURI);
+	List<Spor> hentSporenetilAlbumFraSpotify(String albumsSpotifyURI);
 
 	Album lagreAlbum(Album album);
 
 	List<Album> finnAlbum(Long hylleId, Sjanger sjanger, Tidsperiode tidsperiode);
 	
 	Artist lastAlleAlbum(Artist artist);
+
+	Artist hentManglendeAlbumFraSpotify(Artist artist);
 
 }

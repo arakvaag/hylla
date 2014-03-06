@@ -1,6 +1,6 @@
 package org.rakvag.hylla.domain;
 
-import java.util.Set;
+import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,7 +37,7 @@ public class Artist implements SpotifyEntitet {
 	@Column(nullable = false)
 	private boolean erAlleAlbumLastet;
 	@OneToMany(mappedBy = "artist")
-	private Set<Album> album;
+	private Collection<Album> album;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -77,11 +77,11 @@ public class Artist implements SpotifyEntitet {
 		this.spotifyURI = spotifyURI;
 	}
 
-	public Set<Album> getAlbum() {
+	public Collection<Album> getAlbum() {
 		return album;
 	}
 
-	public void setAlbum(Set<Album> album) {
+	public void setAlbum(Collection<Album> album) {
 		this.album = album;
 	}
 

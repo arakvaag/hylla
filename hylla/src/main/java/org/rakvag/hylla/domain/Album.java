@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,7 +53,7 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 	private float popularitet;
 
 	@Transient
-	private Set<Spor> spor;
+	private List<Spor> spor;
 	@Transient
 	private boolean erPaaHylle;
 
@@ -214,11 +213,11 @@ public class Album implements SpotifyEntitet, DBEntitet, Comparable<Album> {
 		this.sjanger = sjanger;
 	}
 
-	public Set<Spor> getSpor() {
+	public List<Spor> getSpor() {
 		return spor;
 	}
 
-	public void setSpor(Set<Spor> spor) {
+	public void setSpor(List<Spor> spor) {
 		this.spor = spor;
 	}
 

@@ -19,6 +19,14 @@ public class SpotifyAlbum extends SpotifyEntitet {
 	public SpotifyAlbum() {
 		super();
 	}
+	
+	public SpotifyAlbum(String name, String href, String artist, String artistid, String territories) {
+		this.name = name;
+		this.href = href;
+		this.artist = artist;
+		this.artistid = artistid;
+		this.availability = new Availability(territories);
+	}
 
 	public static String lagSpotifylink(String spotifyURI) {
 		return "http://open.spotify.com/album/" + spotifyURI.split(":")[2];
@@ -36,6 +44,10 @@ public class SpotifyAlbum extends SpotifyEntitet {
 
 	public String getArtistid() {
 		return artistid;
+	}
+
+	public void setArtistid(String artistid) {
+		this.artistid = artistid;
 	}
 
 	public int getReleased() {
@@ -68,6 +80,10 @@ public class SpotifyAlbum extends SpotifyEntitet {
 
 	public void setArtists(List<SpotifyArtist> artists) {
 		this.artists = artists;
+	}
+
+	public void setAvailability(Availability availability) {
+		this.availability = availability;
 	}
 
 }

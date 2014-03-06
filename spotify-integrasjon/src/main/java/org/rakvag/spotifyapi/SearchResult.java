@@ -18,6 +18,12 @@ public class SearchResult {
 	private SpotifyTrack track;
 	private SpotifyArtist artist;
 
+	public SearchResult() {}
+	
+	public SearchResult(SpotifyAlbum album) {
+		this.album = album;
+	}
+	
 	public static SearchResult parseJsonSearchResult(String jsonResponse) {
 		// Har ikke funnet hvordan GSON kan deserialisere når feltnavnet har - i seg
 		jsonResponse = jsonResponse.replace("-id", "id");
@@ -111,6 +117,10 @@ public class SearchResult {
 
 	public SpotifyAlbum getAlbum() {
 		return album;
+	}
+	
+	public void setAlbum(SpotifyAlbum album) {
+		this.album = album;
 	}
 
 	public SpotifyTrack getTrack() {

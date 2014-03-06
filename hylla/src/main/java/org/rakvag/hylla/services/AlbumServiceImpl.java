@@ -19,7 +19,6 @@ import org.rakvag.hylla.domain.Artist;
 import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.domain.Spor;
 import org.rakvag.hylla.domain.Tidsperiode;
-import org.rakvag.spotifyapi.SearchResult;
 import org.rakvag.spotifyapi.SpotifyAPI;
 import org.rakvag.spotifyapi.entity.SpotifyAlbum;
 import org.rakvag.spotifyapi.entity.SpotifyArtist;
@@ -31,9 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AlbumServiceImpl implements AlbumService {
-
-	private final static int MAX_ANTALL_ALBUM_FRA_SOEK = 28;
-	private final static int MAX_ANTALL_ALBUM_SOM_HENTES_SAMTIDIG = 50;
 
 	private static Logger logger = LoggerFactory.getLogger(AlbumServiceImpl.class.getName());
 
@@ -47,39 +43,39 @@ public class AlbumServiceImpl implements AlbumService {
 	private AlbumDAO albumDAO;
 	@Inject 
 	private ArtistDAO artistDAO;
+	@Inject
+	private Oversetter oversetter;
 
-	void setAlbumDAO(AlbumDAO albumDAO) { //For å støtte enhetstesting
-		this.albumDAO = albumDAO;
-	}
-	
 	@Override
 	@Transactional
 	public List<Album> soekEtterAlbumISpotify(String artistnavn, String albumnavn, boolean taMedKorteAlbum) {
 		logger.info("Starter tjenesten soekEtterAlbumISpotify med artistnavn " + artistnavn + " og albumnavn " + albumnavn);
-		List<SpotifyAlbum> albumFraSoek = null;
-		try {
-			albumFraSoek = spotifyAPI.soekEtterAlbum(artistnavn, albumnavn, 20);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-		if (albumFraSoek == null || albumFraSoek.size() == 0)
+		
+		List<SpotifyAlbum> albumFraSoek = spotifyAPI.soekEtterAlbum(artistnavn, albumnavn, 20);
+		if (albumFraSoek.size() == 0)
 			return new ArrayList<Album>();
 
-		Iterator<SpotifyAlbum> iterator = albumFraSoek.iterator();
-		while (iterator.hasNext()) {
-			if (!iterator.next().erTilgjengeligINorge())
-				iterator.remove();
-		}
-		if (albumFraSoek.size() > MAX_ANTALL_ALBUM_FRA_SOEK)
-			albumFraSoek.subList(0, MAX_ANTALL_ALBUM_FRA_SOEK - 1);
+		albumFraSoek = fjernAlbumSomIkkeErTilgjengeligINorge(albumFraSoek);
+
+		int maxAntallAlbumFraSoek = 28;
+		if (albumFraSoek.size() > maxAntallAlbumFraSoek)
+			albumFraSoek.subList(0, maxAntallAlbumFraSoek - 1);
 		
-		Set<String> albumSomSkalLagresIDB = Oversetter.hentAlbumURIene(albumFraSoek);
+		Set<String> albumSomSkalLagresIDB = hentAlbumURIene(albumFraSoek);
 		Map<String, Album> albumLagretIDB = albumDAO.hentPaaSpotifyURIer(albumSomSkalLagresIDB);
 		albumSomSkalLagresIDB.removeAll(albumLagretIDB.keySet());
 		Collection<SpotifyAlbum> spotifyAlbumHentet = spotifyAPI.hentAlbumPaaSpotifyURIer(albumSomSkalLagresIDB, 3);
 		
-		Map<String, Sjanger> artistersSjanger = artistService.hentArtistersDefaultSjanger(Oversetter.hentArtistURIene(spotifyAlbumHentet));
-		Collection<Album> albumHentetFraSpotify = Oversetter.oversettSpotifyAlbum(spotifyAlbumHentet, artistersSjanger);
+		Map<String, Sjanger> artistersSjanger = artistService.hentArtistersDefaultSjanger(oversetter.hentArtistURIene(spotifyAlbumHentet));
+		Collection<Album> albumHentetFraSpotify = oversetter.oversettSpotifyAlbum(spotifyAlbumHentet);
+		for(Album album : albumHentetFraSpotify) {
+			String artistSpotifyURI = album.getArtist().getSpotifyURI();
+			if (artistersSjanger.containsKey(artistSpotifyURI))
+				album.setSjanger(artistersSjanger.get(artistSpotifyURI));
+			else 
+				album.setSjanger(Sjanger.IKKE_SATT);
+		}
+			
 		albumHentetFraSpotify = synkroniserAlbumInklArtistMedDB(albumHentetFraSpotify);
 		Map<String, String> coverartLinker = spotifyAPI.hentBildelinker(albumSomSkalLagresIDB);
 		for (Album hentetAlbum : albumHentetFraSpotify)
@@ -89,13 +85,20 @@ public class AlbumServiceImpl implements AlbumService {
 			albumLagretIDB.put(album.getSpotifyURI(), lagreAlbum(album));
 
 		List<Album> soeketreffeneIRiktigRekkefolge = new ArrayList<Album>();
-		for (String albumURI : Oversetter.hentAlbumURIene(albumFraSoek)) {
+		for (String albumURI : hentAlbumURIene(albumFraSoek)) {
 			if(albumLagretIDB.containsKey(albumURI))
 				soeketreffeneIRiktigRekkefolge.add(albumLagretIDB.get(albumURI));
 		}
 		
 		logger.info("Avslutter tjenesten soekEtterAlbumISpotify med artistnavn " + artistnavn + " og albumnavn " + albumnavn);
 		return soeketreffeneIRiktigRekkefolge;
+	}
+
+	private Set<String> hentAlbumURIene(Collection<SpotifyAlbum> albumene) {
+		Set<String> albumURIene = new HashSet<String>();
+		for (SpotifyAlbum album : albumene)
+			albumURIene.add(album.getHref());
+		return albumURIene;
 	}
 
 	@Override
@@ -112,9 +115,9 @@ public class AlbumServiceImpl implements AlbumService {
 	}
 
 	@Override
-	public Set<Spor> hentSporenetilAlbumFraSpotify(String albumsSpotifyURI) {
+	public List<Spor> hentSporenetilAlbumFraSpotify(String albumsSpotifyURI) {
 		logger.info("Starter tjenesten hentSporenetilAlbumFraSpotify med albumsSpotifyURI " + albumsSpotifyURI);
-		Set<Spor> sporene = new HashSet<Spor>();
+		List<Spor> sporene = new ArrayList<Spor>();
 
 		ArrayList<String> spotifyURIer = new ArrayList<String>();
 		spotifyURIer.add(albumsSpotifyURI);
@@ -123,7 +126,7 @@ public class AlbumServiceImpl implements AlbumService {
 		if (!spotifyAlbums.isEmpty()) {
 			List<SpotifyTrack> tracks = spotifyAlbums.iterator().next().getTracks();
 			for (SpotifyTrack spotifyTrack : tracks)
-				sporene.add(Oversetter.oversettSpotifyTrack(spotifyTrack));
+				sporene.add(oversetter.oversettSpotifyTrack(spotifyTrack));
 		}
 
 		logger.info("Avslutter tjenesten hentSporenetilAlbumFraSpotify med albumsSpotifyURI " + albumsSpotifyURI);
@@ -155,44 +158,80 @@ public class AlbumServiceImpl implements AlbumService {
 	@Transactional
 	public Artist lastAlleAlbum(Artist artist) {
 		logger.info("Starter lastAlleAlbum med artistId: " + artist.getId());
-		SpotifyArtist spotifyArtist = spotifyAPI.hentArtistPaaSpotifyURI(artist.getSpotifyURI(), 10);
 		
-		boolean lasterAlleAlbum = true;
-		Set<String> albumSomSkalLastes = new HashSet<String>();
-		for (SearchResult albumWrapper : spotifyArtist.getAlbums()) {
-			SpotifyAlbum album = albumWrapper.getAlbum();
-			if (artist.getSpotifyURI().equals(album.getArtistid())) {
-				albumSomSkalLastes.add(album.getHref());
-			}
-		}
-
-		Set<String> urierPaaAlbumSomSkalHentes = new HashSet<String>();
-		Set<String> urierPaaAlbumSomFinnesIDB = albumDAO.hvilkeAvDisseFinnesIDB(albumSomSkalLastes);
-		for (String albumHref : albumSomSkalLastes) {
-			if (!urierPaaAlbumSomFinnesIDB.contains(albumHref))
-				urierPaaAlbumSomSkalHentes.add(albumHref);
-			if (urierPaaAlbumSomSkalHentes.size() >= MAX_ANTALL_ALBUM_SOM_HENTES_SAMTIDIG) {
-				lasterAlleAlbum = false;
-				break;
-			}
-		}
-		
-		Collection<SpotifyAlbum> spotifyAlbumene = spotifyAPI.hentAlbumPaaSpotifyURIer(urierPaaAlbumSomSkalHentes, 5);
-		Set<String> artistURIer = Oversetter.hentArtistURIene(spotifyAlbumene);
-		Collection<Album> albumene = Oversetter.oversettSpotifyAlbum(spotifyAlbumene, 
-				artistService.hentArtistersDefaultSjanger(artistURIer));
-		Map<String, String> bildelinker = spotifyAPI.hentBildelinker(urierPaaAlbumSomSkalHentes);
-		for (Album album : albumene)
-			album.setCoverartlink(bildelinker.get(album.getSpotifyURI()));
-		albumene.addAll(albumDAO.hentPaaSpotifyURIer(urierPaaAlbumSomFinnesIDB).values());
-		Set<Album> synkedeAlbum = synkroniserAlbumInklArtistMedDB(albumene);
-		artist.setAlbum(synkedeAlbum);
-		artist.setErAlleAlbumLastet(lasterAlleAlbum);
+		artist = hentManglendeAlbumFraSpotify(artist);
+		for(Album album : artist.getAlbum())
+			albumDAO.lagre(album);
+		artistDAO.lagre(artist);
 
 		logger.info("Fullført lastAlleAlbum med artistId: " + artist.getId());
 		return artist;
 	}
 
+	@Override
+	public Artist hentManglendeAlbumFraSpotify(Artist artist) {
+		logger.info("Starter hentManglendeAlbumFraSpotify med artistId: " + artist.getId());
+		if (artist.isErAlleAlbumLastet())
+			return artist;
+		
+		SpotifyArtist spotifyArtist = spotifyAPI.hentArtistPaaSpotifyURI(artist.getSpotifyURI(), 10);
+		Set<String> urierPaaAlbumSomSkalHentes = spotifyArtist.hentAlbumURIene();
+		urierPaaAlbumSomSkalHentes = fjernAlbumSomFinnesPaaArtistenAllerede(artist, urierPaaAlbumSomSkalHentes);
+		artist.setErAlleAlbumLastet(urierPaaAlbumSomSkalHentes.size() <= 50); 
+		urierPaaAlbumSomSkalHentes = lagSubsettPaaMaks50stk(urierPaaAlbumSomSkalHentes);
+		Collection<SpotifyAlbum> spotifyAlbum = spotifyAPI.hentAlbumPaaSpotifyURIer(urierPaaAlbumSomSkalHentes, 5);
+		spotifyAlbum = fjernAlbumSomIkkeErTilgjengeligINorge(new ArrayList<SpotifyAlbum>(spotifyAlbum));
+		Collection<Album> hentedeAlbum = oversetter.oversettSpotifyAlbum(spotifyAlbum);
+		Map<String, String> coverartlinker = spotifyAPI.hentBildelinker(urierPaaAlbumSomSkalHentes);
+		for(Album album : hentedeAlbum) {
+			album.setArtist(artist);
+			album.setSjanger(artist.getDefaultSjanger());
+			album.setCoverartlink(coverartlinker.get(album.getSpotifyURI()));
+		}
+		artist.getAlbum().addAll(hentedeAlbum);
+
+		logger.info("Fullført hentManglendeAlbumFraSpotify med artistId: " + artist.getId());
+		return artist;
+	}
+
+	private List<SpotifyAlbum> fjernAlbumSomIkkeErTilgjengeligINorge(List<SpotifyAlbum> spotifyAlbum) {
+		Iterator<SpotifyAlbum> iterator = spotifyAlbum.iterator();
+		while (iterator.hasNext()){
+			SpotifyAlbum album =  iterator.next();
+			if (!album.erTilgjengeligINorge())
+				iterator.remove();
+		}
+		
+		return spotifyAlbum;
+	}
+
+	private Set<String> fjernAlbumSomFinnesPaaArtistenAllerede(Artist artist, Set<String> urierPaaAlbumSomSkalHentes) {
+		Set<String> filtrerteAlbumURIer = new HashSet<String>();
+		Set<String> albumURIerIDomeneObjekt = new HashSet<String>();
+		for(Album album : artist.getAlbum()) {
+			albumURIerIDomeneObjekt.add(album.getSpotifyURI());
+		}
+		for(String albumURI : urierPaaAlbumSomSkalHentes) {
+			if (!albumURIerIDomeneObjekt.contains(albumURI))
+				filtrerteAlbumURIer.add(albumURI);
+		}
+		urierPaaAlbumSomSkalHentes = filtrerteAlbumURIer;
+		return urierPaaAlbumSomSkalHentes;
+	}
+
+	private Set<String> lagSubsettPaaMaks50stk(Set<String> strenger) {
+		if (strenger.size() > 50) {
+			Set<String> maks50Strenger = new HashSet<String>();
+			for(String streng : strenger) {
+				if (maks50Strenger.size() >= 50)
+					break;
+				maks50Strenger.add(streng);
+			}
+			strenger = maks50Strenger;
+		}
+		return strenger;
+	}
+	
 	private Set<Album> synkroniserAlbumInklArtistMedDB(Collection<Album> albumene) {
 		//TODO Denne er trolig alt for avansert. Se om det kan gjøres til en mye enklere lagre-metode.
 			// Dette forutsetter at input kun innholder album som ikke allerede finnes i DB
@@ -248,6 +287,26 @@ public class AlbumServiceImpl implements AlbumService {
 			artisterIDB.putAll(artistDAO.opprett(nyeArtister.values()));
 		
 		return artisterIDB;
+	}
+	
+	//For å støtte enhetstesting
+	void setAlbumDAO(AlbumDAO albumDAO) { 
+		this.albumDAO = albumDAO;
+	}
+	void setOversetter(Oversetter oversetter) {
+		this.oversetter = oversetter;
+	}
+	void setSpotifyAPI(SpotifyAPI spotifyAPI) {
+		this.spotifyAPI = spotifyAPI;
+	}
+	void setHylleService(HylleService hylleService) {
+		this.hylleService = hylleService;
+	}
+	void setArtistService(ArtistService artistService) {
+		this.artistService = artistService;
+	}
+	void setArtistDAO(ArtistDAO artistDAO) {
+		this.artistDAO = artistDAO;
 	}
 
 }

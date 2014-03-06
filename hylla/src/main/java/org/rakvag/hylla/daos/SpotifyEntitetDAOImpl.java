@@ -80,8 +80,6 @@ public abstract class SpotifyEntitetDAOImpl<T extends SpotifyEntitet> extends En
 		logger.info("Starter lagring av spotifyentitet med URI: " + entitet.getSpotifyURI());
 		if (entitet.getId() != null) {
 			return this.em.merge(entitet);
-		} else if (finnesDenneIDB(entitet.getSpotifyURI())) {
-			throw new RuntimeException("Spotify-entiteten finnes allerede i databasen, kan ikke lagre");
 		} else {
 			this.em.persist(entitet);
 			return entitet;

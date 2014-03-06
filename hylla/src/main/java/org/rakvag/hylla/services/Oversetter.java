@@ -1,37 +1,32 @@
 package org.rakvag.hylla.services;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.rakvag.hylla.domain.Album;
 import org.rakvag.hylla.domain.Artist;
-import org.rakvag.hylla.domain.Sjanger;
 import org.rakvag.hylla.domain.Spor;
 import org.rakvag.spotifyapi.SearchResult;
 import org.rakvag.spotifyapi.entity.SpotifyAlbum;
 import org.rakvag.spotifyapi.entity.SpotifyArtist;
 import org.rakvag.spotifyapi.entity.SpotifyTrack;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Oversetter {
 	
-	public static Collection<Album> oversettSpotifyAlbum(Collection<SpotifyAlbum> spotifyAlbumene, Map<String, Sjanger> artistersSjanger) {
-		//TODO Skal ikke ha ansvaret for å sette sjanger. Må refaktoreres
+	public Collection<Album> oversettSpotifyAlbum(Collection<SpotifyAlbum> spotifyAlbumene) {
 		Collection<Album> domAlbumene = new HashSet<Album>();
 		for (SpotifyAlbum spotifyAlbum : spotifyAlbumene) {
-			Sjanger artistsSjanger = Sjanger.IKKE_SATT;
-			if (artistersSjanger.containsKey(spotifyAlbum.getArtistid()))
-				artistsSjanger = artistersSjanger.get(spotifyAlbum.getArtistid());
-			domAlbumene.add(oversettSpotifyAlbum(spotifyAlbum, artistsSjanger));
+			domAlbumene.add(oversettSpotifyAlbum(spotifyAlbum));
 		}
 		return domAlbumene;
 	}
 
-	public static Album oversettSpotifyAlbum(SpotifyAlbum spotifyAlbum, Sjanger sjanger) {
+	public Album oversettSpotifyAlbum(SpotifyAlbum spotifyAlbum) {
 		Album album = new Album();
 
 		album.setAar(spotifyAlbum.getReleased());
@@ -40,14 +35,11 @@ public class Oversetter {
 		SpotifyArtist spotifyArtist = new SpotifyArtist();
 		spotifyArtist.setName(spotifyAlbum.getArtist());
 		spotifyArtist.setHref(spotifyAlbum.getArtistid());
-		Map<String, Sjanger> artistSjanger = new HashMap<String, Sjanger>();
-		artistSjanger.put(Artist.URI_VARIOUS_ARTISTS_ARTIST, Sjanger.IKKE_SATT);
-		album.setArtist(oversettSpotifyArtist(spotifyArtist, artistSjanger));
+		album.setArtist(oversettSpotifyArtist(spotifyArtist));
 
 		album.setSpotifyURI(spotifyAlbum.getHref());
 		album.setNavn(spotifyAlbum.getName());
-		album.setSjanger(sjanger);
-		album.setSpor(new HashSet<Spor>());
+		album.setSpor(new ArrayList<Spor>());
 		Double albumLengde = 0D;
 		Float popularitet = 0F;
 		for (SpotifyTrack track : spotifyAlbum.getTracks()) {
@@ -62,7 +54,7 @@ public class Oversetter {
 		return album;
 	}
 
-	public static Spor oversettSpotifyTrack(SpotifyTrack track) {
+	public Spor oversettSpotifyTrack(SpotifyTrack track) {
 		Spor spor = new Spor();
 
 		spor.setDisknummer(track.getDiscnumber());
@@ -75,7 +67,7 @@ public class Oversetter {
 		return spor;
 	}
 
-	public static Artist oversettSpotifyArtist(SpotifyArtist spotifyArtist, Map<String, Sjanger> artistersSjanger) {
+	public Artist oversettSpotifyArtist(SpotifyArtist spotifyArtist) {
 		Artist artist = new Artist();
 		artist.setNavn(spotifyArtist.getName());
 		if ("Various Artists".equalsIgnoreCase(spotifyArtist.getName())) {
@@ -86,17 +78,14 @@ public class Oversetter {
 		Set<Album> album = new HashSet<Album>();
 		if (spotifyArtist.getAlbums() != null) {
 			for (SearchResult albumWrapper : spotifyArtist.getAlbums()) {
-				Sjanger artistsSjanger = Sjanger.IKKE_SATT;
-				if (artistersSjanger.containsKey(spotifyArtist.getHref()))
-					artistsSjanger = artistersSjanger.get(spotifyArtist.getHref());
-				album.add(oversettSpotifyAlbum(albumWrapper.getAlbum(), artistsSjanger));
+				album.add(oversettSpotifyAlbum(albumWrapper.getAlbum()));
 			}
 		}
 		artist.setAlbum(album);
 		return artist;
 	}
 
-	public static Set<String> hentArtistURIene(Collection<SpotifyAlbum> albumene) {
+	public Set<String> hentArtistURIene(Collection<SpotifyAlbum> albumene) {
 		Set<String> artistURIer = new HashSet<String>();
 		for (SpotifyAlbum album : albumene) {
 			if (StringUtils.isNotBlank(album.getArtistid())) {
@@ -108,14 +97,6 @@ public class Oversetter {
 		}
 		
 		return artistURIer;
-	}
-
-	public static Set<String> hentAlbumURIene(List<SpotifyAlbum> albumene) {
-		Set<String> albumURIene = new HashSet<String>();
-		for (SpotifyAlbum album : albumene) {
-			albumURIene.add(album.getHref());
-		}
-		return albumURIene;
 	}
 
 }
