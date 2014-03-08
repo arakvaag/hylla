@@ -175,6 +175,7 @@ public class AlbumServiceImpl implements AlbumService {
 			return artist;
 		
 		SpotifyArtist spotifyArtist = spotifyAPI.hentArtistPaaSpotifyURI(artist.getSpotifyURI(), 10);
+		spotifyArtist.fjernAlbumeneSomIkkeHarArtistenSomHovedartist();
 		Set<String> urierPaaAlbumSomSkalHentes = spotifyArtist.hentAlbumURIene();
 		urierPaaAlbumSomSkalHentes = fjernAlbumSomFinnesPaaArtistenAllerede(artist, urierPaaAlbumSomSkalHentes);
 		artist.setErAlleAlbumLastet(urierPaaAlbumSomSkalHentes.size() <= 50); 

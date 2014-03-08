@@ -155,7 +155,7 @@ public class AlbumServiceImplTest {
 		spotifyAlbum2.setAvailability(new Availability("NO"));
 		spotifyArtist.getAlbums().add(new SearchResult(spotifyAlbum2));
 		when(spotifyAPI.hentArtistPaaSpotifyURI(anyString(), anyInt())).thenReturn(spotifyArtist);
-		
+
 		Collection<SpotifyAlbum> spotifyAlbumene = new HashSet<SpotifyAlbum>();
 		spotifyAlbumene.add(spotifyAlbum1);
 		spotifyAlbumene.add(spotifyAlbum2);
@@ -181,21 +181,21 @@ public class AlbumServiceImplTest {
 		spotifyArtist.setAlbums(new ArrayList<SearchResult>());
 		spotifyArtist.getAlbums().add(new SearchResult(new SpotifyAlbum("albumNavn", "albumHref", "artistNavn", "artistHref", "NO")));
 		when(spotifyAPI.hentArtistPaaSpotifyURI(anyString(), anyInt())).thenReturn(spotifyArtist);
-	
+
 		Collection<Album> domeneAlbum = new ArrayList<Album>();
 		Album album = new Album();
 		album.setNavn("albumNavn");
 		album.setSpotifyURI("albumHref");
 		domeneAlbum.add(album);
 		when(oversetter.oversettSpotifyAlbum(anyCollectionOf(SpotifyAlbum.class))).thenReturn(domeneAlbum);
-		
+
 		Artist inputArtist = new Artist();
 		inputArtist.setAlbum(new HashSet<Album>());
 		inputArtist.setDefaultSjanger(Sjanger.ELECTRONICA);
-	
+
 		// Act
 		Artist returArtist = service.hentManglendeAlbumFraSpotify(inputArtist);
-		
+
 		// Assert
 		assertEquals(Sjanger.ELECTRONICA, returArtist.getAlbum().iterator().next().getSjanger());
 	}
@@ -207,21 +207,21 @@ public class AlbumServiceImplTest {
 		spotifyArtist.setAlbums(new ArrayList<SearchResult>());
 		spotifyArtist.getAlbums().add(new SearchResult(new SpotifyAlbum("albumNavn", "albumHref", "artistNavn", "artistHref", "NO")));
 		when(spotifyAPI.hentArtistPaaSpotifyURI(anyString(), anyInt())).thenReturn(spotifyArtist);
-	
+
 		Collection<Album> domeneAlbum = new ArrayList<Album>();
 		Album album = new Album();
 		album.setNavn("albumNavn");
 		album.setSpotifyURI("albumHref");
 		domeneAlbum.add(album);
 		when(oversetter.oversettSpotifyAlbum(anyCollectionOf(SpotifyAlbum.class))).thenReturn(domeneAlbum);
-		
+
 		Artist inputArtist = new Artist();
 		inputArtist.setAlbum(new HashSet<Album>());
 		inputArtist.setDefaultSjanger(Sjanger.ELECTRONICA);
-	
+
 		// Act
 		Artist returArtist = service.hentManglendeAlbumFraSpotify(inputArtist);
-		
+
 		// Assert
 		assertEquals(Sjanger.ELECTRONICA, returArtist.getAlbum().iterator().next().getSjanger());
 	}
@@ -280,7 +280,8 @@ public class AlbumServiceImplTest {
 		SpotifyArtist spotifyArtist = new SpotifyArtist(artistNavn, artistHref);
 		spotifyArtist.setAlbums(new ArrayList<SearchResult>());
 		for (int i = 1; i <= 55; i++)
-			spotifyArtist.getAlbums().add(new SearchResult(new SpotifyAlbum("albumNavn" + i, "albumHref" + i, artistNavn, artistHref, "NO")));
+			spotifyArtist.getAlbums().add(
+					new SearchResult(new SpotifyAlbum("albumNavn" + i, "albumHref" + i, artistNavn, artistHref, "NO")));
 		when(spotifyAPI.hentArtistPaaSpotifyURI(anyString(), anyInt())).thenReturn(spotifyArtist);
 
 		Artist inputArtist = new Artist();
@@ -369,16 +370,48 @@ public class AlbumServiceImplTest {
 	}
 
 	@Test
+	public void testHentManglendeAlbumFraSpotify_NaarNoenAvAlbumeneReturnertFraSpotifyIkkeHarArtistenSomHovedartist_SkalKunDeSomHarArtistenSomHovedartistBliHentet() {
+		ArrayList<String> albumURIer = new ArrayList<String>();
+		albumURIer.add("albumURI1");
+		albumURIer.add("albumURI2");
+		albumURIer.add("albumURI3");
+		albumURIer.add("albumURI4");
+
+		// Arrange
+		String artistNavn = "artistNavn";
+		String artistHref = "artistHref";
+		String samleAlbumArtistHref = "samleAlbumArtistHref";
+		SpotifyArtist spotifyArtist = new SpotifyArtist(artistNavn, artistHref);
+		ArrayList<SearchResult> albums = new ArrayList<SearchResult>();
+		spotifyArtist.setAlbums(albums);
+		albums.add(new SearchResult(new SpotifyAlbum("albumNavn", albumURIer.get(0), artistNavn, artistHref, "NO")));
+		albums.add(new SearchResult(new SpotifyAlbum("albumNavn", albumURIer.get(1), artistNavn, artistHref, "NO")));
+		albums.add(new SearchResult(new SpotifyAlbum("albumNavn", albumURIer.get(2), artistNavn, samleAlbumArtistHref, "NO")));
+		albums.add(new SearchResult(new SpotifyAlbum("albumNavn", albumURIer.get(3), artistNavn, samleAlbumArtistHref, "NO")));
+		when(spotifyAPI.hentArtistPaaSpotifyURI(anyString(), anyInt())).thenReturn(spotifyArtist);
+
+		Artist inputArtist = new Artist();
+		inputArtist.setErAlleAlbumLastet(false);
+		inputArtist.setAlbum(new HashSet<Album>());
+
+		// Act
+		service.hentManglendeAlbumFraSpotify(inputArtist);
+
+		// Assert
+		verify(spotifyAPI).hentAlbumPaaSpotifyURIer(new HashSet<String>(albumURIer.subList(0, 2)), 5);
+	}
+
+	@Test
 	public void testSoekEtterAlbumISpotify_NaarDetErIngenTreffISpotify_SkalTjenestenAvslutteOgReturnereTomListe() {
-		//Arrange
+		// Arrange
 		when(spotifyAPI.soekEtterAlbum(anyString(), anyString(), anyInt())).thenReturn(new ArrayList<SpotifyAlbum>());
-		
-		//Act
+
+		// Act
 		List<Album> returAlbum = service.soekEtterAlbumISpotify("", "", false);
-		
-		//Assert
+
+		// Assert
 		assertEquals(0, returAlbum.size());
 		verifyZeroInteractions(oversetter, albumDAO, artistService);
 	}
-	
+
 }

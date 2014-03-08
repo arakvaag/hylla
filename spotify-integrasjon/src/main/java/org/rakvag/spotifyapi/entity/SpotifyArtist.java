@@ -1,6 +1,7 @@
 package org.rakvag.spotifyapi.entity;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -38,6 +39,14 @@ public class SpotifyArtist extends SpotifyEntitet {
 				albumURIene.add(searchResult.getAlbum().getHref());
 		}
 		return albumURIene;
+	}
+
+	public void fjernAlbumeneSomIkkeHarArtistenSomHovedartist() {
+		for (Iterator<SearchResult> iterator = albums.iterator(); iterator.hasNext();) {
+			SpotifyAlbum spotifyAlbum = iterator.next().getAlbum();
+			if (spotifyAlbum != null && !href.equals(spotifyAlbum.getArtistid()))
+				iterator.remove();
+		}
 	}
 
 }
